@@ -434,26 +434,30 @@ function v(cosa, tipo) {
   return r;
 }
 
+function calcularDescuento(precio, descuentoNivel, descuentoCupon, descuentoEspecial) {
+  const montoDescuentoN = precio * (descuentoNivel / 100);
+  const montoDescuentoC = (precio - montoDescuentoN) * (descuentoCupon / 100);
+  const montoDescuentoE = (precio - montoDescuentoN - montoDescuentoC) * (descuentoEspecial / 100);
+  return {
+    precioConDescuento: precio - montoDescuentoN - montoDescuentoC - montoDescuentoE,
+    descuentoCupon: montoDescuentoC,
+    descuentoEspecial: montoDescuentoE,
+    descuentoNivel: montoDescuentoN
+  };
+}
+function sacarIva(precio, tieneIva) {
+  let montoIva = tieneIva ? precio * 0.19 : 0;
+  return { precioConIva: precio + montoIva, montoIva};
+}
+function envio(precio, envio) {
+  if(envio > 0) {
+    return precio + envio;
+  }
+  return precio;
+}
 // calcular precio con todo
 function calcularPrecio(precioBase, descuentoNivel, descuentoCupon, descuentoEspecial, iva, envio, numeroCuotas) {
-  var r = 0, r2 = 0, r3 = 0, r4 = 0, r5 = 0, r6 = 0, r7 = 0;
-  r = precioBase;
-  if (descuentoNivel > 0) {
-    r2 = r * (descuentoNivel / 100);
-    r = r - r2;
-  }
-  if (descuentoCupon > 0) {
-    r3 = r * (descuentoCupon  / 100);
-    r = r - r3;
-  }
-  if (descuentoEspecial > 0) {
-    r4 = r * (descuentoEspecial / 100);
-    r = r - r4;
-  }
-  if (iva == true) {
-    r5 = r * 0.19;
-    r = r + r5;
-  }
+  
   if (envio > 0) {
     r = r + envio;
   }
@@ -499,25 +503,10 @@ function calcularPrecio(precioBase, descuentoNivel, descuentoCupon, descuentoEsp
 }
 
 // funcion de reporte
-function makeReport(type, from, to, data, data2, data3, opts) {
-  var report = "";
-  var lines = [];
-  var totalGeneral = 0;
-  var totalGeneral2 = 0;
-  var totalGeneral3 = 0;
-  var count = 0;
-  var count2 = 0;
-  var count3 = 0;
-  var avg = 0;
-  var avg2 = 0;
-  var avg3 = 0;
-  var max = 0;
-  var max2 = 0;
-  var max3 = 0;
-  var min = 999999999;
-  var min2 = 999999999;
-  var min3 = 999999999;
-  
+function hacerReporte(type, from, to, data) {
+  var report = "", lines = [], totalGeneral = 0, totalGeneral2 = 0, totalGeneral3 = 0, count = 0, count2 = 0, count3 = 0, avg = 0, avg2 = 0, avg3 = 0, max = 0, max2 = 0, max3 = 0, 
+  min = 999999999, min2 = 999999999, min3 = 999999999;
+
   if (type == "ventas") {
     report += "=== REPORTE DE VENTAS ===\n";
     report += "Desde: " + from + "\n";
