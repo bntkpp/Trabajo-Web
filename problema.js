@@ -3,9 +3,7 @@
 // fecha: no se
 // version: final_v2_BUENO_este_si
 
-
 var sessData;
-var a, b, cc, dd, ee, ff, gg, hh, ii2, jj2;
 // =====================================
 // funcion principal que hace todo
 // =====================================
@@ -437,32 +435,19 @@ function v(cosa, tipo) {
 }
 
 // calcular precio con todo
-function calc(p, d, d2, d3, iva, envio, cuotas) {
-  // p = precio base
-  // d = descuento nivel
-  // d2 = descuento cupon
-  // d3 = descuento especial
-  // iva = si aplica iva
-  // envio = costo envio
-  // cuotas = numero cuotas
-  var r = 0;
-  var r2 = 0;
-  var r3 = 0;
-  var r4 = 0;
-  var r5 = 0;
-  var r6 = 0;
-  var r7 = 0;
-  r = p;
-  if (d > 0) {
-    r2 = r * (d / 100);
+function calcularPrecio(precioBase, descuentoNivel, descuentoCupon, descuentoEspecial, iva, envio, numeroCuotas) {
+  var r = 0, r2 = 0, r3 = 0, r4 = 0, r5 = 0, r6 = 0, r7 = 0;
+  r = precioBase;
+  if (descuentoNivel > 0) {
+    r2 = r * (descuentoNivel / 100);
     r = r - r2;
   }
-  if (d2 > 0) {
-    r3 = r * (d2 / 100);
+  if (descuentoCupon > 0) {
+    r3 = r * (descuentoCupon  / 100);
     r = r - r3;
   }
-  if (d3 > 0) {
-    r4 = r * (d3 / 100);
+  if (descuentoEspecial > 0) {
+    r4 = r * (descuentoEspecial / 100);
     r = r - r4;
   }
   if (iva == true) {
@@ -473,42 +458,42 @@ function calc(p, d, d2, d3, iva, envio, cuotas) {
     r = r + envio;
   }
   r6 = r;
-  if (cuotas > 1) {
+  if (numeroCuotas > 1) {
     // agregar interes segun cuotas
-    if (cuotas == 2) {
+    if (numeroCuotas == 2) {
       r7 = r * 0.02;
       r = r + r7;
     }
-    if (cuotas == 3) {
+    if (numeroCuotas == 3) {
       r7 = r * 0.04;
       r = r + r7;
     }
-    if (cuotas == 6) {
+    if (numeroCuotas == 6) {
       r7 = r * 0.08;
       r = r + r7;
     }
-    if (cuotas == 12) {
+    if (numeroCuotas == 12) {
       r7 = r * 0.15;
       r = r + r7;
     }
-    if (cuotas == 24) {
+    if (numeroCuotas == 24) {
       r7 = r * 0.28;
       r = r + r7;
     }
-    if (cuotas == 36) {
+    if (numeroCuotas == 36) {
       r7 = r * 0.45;
       r = r + r7;
     }
   }
   return {
-    base: p,
+    base: precioBase,
     dscto1: r2,
     dscto2: r3,
     dscto3: r4,
     subtotal: r6,
     iva: r5,
     envio: envio,
-    totalCuota: cuotas > 1 ? r / cuotas : r,
+    totalCuota: numeroCuotas > 1 ? r / numeroCuotas : r,
     total: r
   };
 }
