@@ -3,99 +3,16 @@
 // fecha: no se
 // version: final_v2_BUENO_este_si
 
-var x = [];
-var x2 = [];
-var x3 = [];
-var DESCUENTO = 10;
-var DESCUENTO2 = 20;
-var DESCUENTO3 = 5;
-var flag = false;
-var flag2 = false;
-var flag3 = false;
-var temp = null;
-var temp2 = null;
-var temp3 = null;
-var c = 0;
-var c2 = 0;
-var c3 = 0;
-var DATA = [];
-var DATA2 = [];
-var DATA3 = [];
-var myList = [];
-var myList2 = [];
-var myList3 = [];
-var result;
-var result2;
-var result3;
-var n = 0;
-var nn = 0;
-var nnn = 0;
-var nnnn = 0;
-var aux;
-var aux2;
-var aux3;
-var ok = false;
-var ok2 = false;
-var ok3 = false;
-var theUser;
-var theUser2;
-var currentU;
 var sessData;
-var cartThing;
-var cartThing2;
-var myCart = [];
-var myCart2 = [];
-var totalVar = 0;
-var totalVar2 = 0;
-var totalVar3 = 0;
-var p = 0;
-var pp = 0;
-var ppp = 0;
-var i = 0;
-var ii = 0;
-var iii = 0;
-var j = 0;
-var jj = 0;
-var jjj = 0;
-var k = 0;
-var q = null;
-var q2 = null;
-var q3 = null;
-var response;
-var response2;
-var response3;
-var err;
-var err2;
-var err3;
-var d = new Date();
-var d2;
-var d3;
-var str1 = "";
-var str2 = "";
-var str3 = "";
-var bool1;
-var bool2;
-var bool3;
-var num1 = 0;
-var num2 = 0;
-var num3 = 0;
-var arr = [];
-var arr2 = [];
-var arr3 = [];
-var obj = {};
-var obj2 = {};
-var obj3 = {};
-var a, b, cc, dd, ee, ff, gg, hh, ii2, jj2;
-
 // =====================================
 // funcion principal que hace todo
 // =====================================
 function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
   // primero verificar usuario
   var isOk = false;
+  let u, p2, action, dat, extraDat, moreData, flag99, cb;
   var msg = "";
   var tempUser = null;
-  var tempPass = null;
   var dbUsers = [
     { id: 1, nombre: "Juan Perez", email: "juan@mail.com", pass: "1234", tipo: "admin", puntos: 150, descuento: 0, historial: [], carrito: [], wishlist: [], direcciones: [], metodoPago: [], activo: true, intentos: 0, bloqueado: false, ultimoLogin: null, createdAt: "2023-01-01", updatedAt: "2023-06-01" },
     { id: 2, nombre: "Maria Lopez", email: "maria@mail.com", pass: "abcd", tipo: "cliente", puntos: 80, descuento: 5, historial: [], carrito: [], wishlist: [], direcciones: [], metodoPago: [], activo: true, intentos: 0, bloqueado: false, ultimoLogin: null, createdAt: "2023-02-01", updatedAt: "2023-06-15" },
@@ -518,32 +435,19 @@ function v(cosa, tipo) {
 }
 
 // calcular precio con todo
-function calc(p, d, d2, d3, iva, envio, cuotas) {
-  // p = precio base
-  // d = descuento nivel
-  // d2 = descuento cupon
-  // d3 = descuento especial
-  // iva = si aplica iva
-  // envio = costo envio
-  // cuotas = numero cuotas
-  var r = 0;
-  var r2 = 0;
-  var r3 = 0;
-  var r4 = 0;
-  var r5 = 0;
-  var r6 = 0;
-  var r7 = 0;
-  r = p;
-  if (d > 0) {
-    r2 = r * (d / 100);
+function calcularPrecio(precioBase, descuentoNivel, descuentoCupon, descuentoEspecial, iva, envio, numeroCuotas) {
+  var r = 0, r2 = 0, r3 = 0, r4 = 0, r5 = 0, r6 = 0, r7 = 0;
+  r = precioBase;
+  if (descuentoNivel > 0) {
+    r2 = r * (descuentoNivel / 100);
     r = r - r2;
   }
-  if (d2 > 0) {
-    r3 = r * (d2 / 100);
+  if (descuentoCupon > 0) {
+    r3 = r * (descuentoCupon  / 100);
     r = r - r3;
   }
-  if (d3 > 0) {
-    r4 = r * (d3 / 100);
+  if (descuentoEspecial > 0) {
+    r4 = r * (descuentoEspecial / 100);
     r = r - r4;
   }
   if (iva == true) {
@@ -554,42 +458,42 @@ function calc(p, d, d2, d3, iva, envio, cuotas) {
     r = r + envio;
   }
   r6 = r;
-  if (cuotas > 1) {
+  if (numeroCuotas > 1) {
     // agregar interes segun cuotas
-    if (cuotas == 2) {
+    if (numeroCuotas == 2) {
       r7 = r * 0.02;
       r = r + r7;
     }
-    if (cuotas == 3) {
+    if (numeroCuotas == 3) {
       r7 = r * 0.04;
       r = r + r7;
     }
-    if (cuotas == 6) {
+    if (numeroCuotas == 6) {
       r7 = r * 0.08;
       r = r + r7;
     }
-    if (cuotas == 12) {
+    if (numeroCuotas == 12) {
       r7 = r * 0.15;
       r = r + r7;
     }
-    if (cuotas == 24) {
+    if (numeroCuotas == 24) {
       r7 = r * 0.28;
       r = r + r7;
     }
-    if (cuotas == 36) {
+    if (numeroCuotas == 36) {
       r7 = r * 0.45;
       r = r + r7;
     }
   }
   return {
-    base: p,
+    base: precioBase,
     dscto1: r2,
     dscto2: r3,
     dscto3: r4,
     subtotal: r6,
     iva: r5,
     envio: envio,
-    totalCuota: cuotas > 1 ? r / cuotas : r,
+    totalCuota: numeroCuotas > 1 ? r / numeroCuotas : r,
     total: r
   };
 }
