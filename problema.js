@@ -5,7 +5,6 @@
 
 
 var sessData;
-let aa,vv,vvv;
 var a, b, cc, dd, ee, ff, gg, hh, ii2, jj2;
 // =====================================
 // funcion principal que hace todo
