@@ -2,6 +2,8 @@
 // funcion principal que hace todo
 // =====================================
 
+// Matias Diaz
+
 import { dbUsers, dbProducts } from "./database.js";
 
 

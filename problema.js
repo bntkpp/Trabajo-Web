@@ -440,6 +440,8 @@ function v(cosa, tipo) {
 }
 
 // calcular precio con todo
+
+// Benjamin Fernandez
 function calcularPrecio(precioBase, descuentoNivel, descuentoCupon, descuentoEspecial, iva, envio, numeroCuotas) {
   var r = 0, r2 = 0, r3 = 0, r4 = 0, r5 = 0, r6 = 0, r7 = 0;
   r = precioBase;
