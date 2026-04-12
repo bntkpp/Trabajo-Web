@@ -3,6 +3,11 @@
 // fecha: no se
 // version: final_v2_BUENO_este_si
 
+import {buscarUsuario, buscarProductos, agregarAlCarrito, procesarPago, obtenerEstadisticas} from "./functions.js";
+
+// Cuando tengamos todas las funciones separadas, hay que hacer una funcion main.js para llamar a todas las funciones
+// y hacer todas las pruebas unitarias sin problemas y queda todo mas ordenado.
+
 var sessData;
 // =====================================
 // funcion principal que hace todo
