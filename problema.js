@@ -445,50 +445,51 @@ function calcularDescuento(precio, descuentoNivel, descuentoCupon, descuentoEspe
     descuentoNivel: montoDescuentoN
   };
 }
-function sacarIva(precio, tieneIva) {
+function sacarPrecioIva(precio, tieneIva) {
   let montoIva = tieneIva ? precio * 0.19 : 0;
   return { precioConIva: precio + montoIva, montoIva};
 }
-function envio(precio, envio) {
+function calcularPrecioEnvio(precio, envio) {
   if(envio > 0) {
     return precio + envio;
   }
   return precio;
 }
-// calcular precio con todo
-function calcularPrecio(precioBase, descuentoNivel, descuentoCupon, descuentoEspecial, iva, envio, numeroCuotas) {
-  
-  if (envio > 0) {
-    r = r + envio;
-  }
-  r6 = r;
+
+const calcularPrecioFinalConCuotas = (precio, numeroCuotas) => {
+  let precioFinal = precio;
+  const intereses = { 2: 1.02, 3: 1.04, 6: 1.08, 12: 1.15, 24: 1.28, 36: 1.45 };
   if (numeroCuotas > 1) {
-    // agregar interes segun cuotas
-    if (numeroCuotas == 2) {
-      r7 = r * 0.02;
-      r = r + r7;
-    }
-    if (numeroCuotas == 3) {
-      r7 = r * 0.04;
-      r = r + r7;
-    }
-    if (numeroCuotas == 6) {
-      r7 = r * 0.08;
-      r = r + r7;
-    }
-    if (numeroCuotas == 12) {
-      r7 = r * 0.15;
-      r = r + r7;
-    }
-    if (numeroCuotas == 24) {
-      r7 = r * 0.28;
-      r = r + r7;
-    }
-    if (numeroCuotas == 36) {
-      r7 = r * 0.45;
-      r = r + r7;
+    if (numeroCuotas in intereses) {
+      precioFinal = precio * intereses[numeroCuotas];
     }
   }
+  return precioFinal;
+}
+function calcularPrecio(precioBase, descuentoNivel, descuentoCupon, descuentoEspecial, tieneIva, costoEnvio, numeroCuotas) {
+  
+  const { precioConDescuento, ...descuentos } = calcularDescuento(
+    precioBase, descuentoNivel, descuentoCupon, descuentoEspecial
+  );
+
+  const { precioConIva, montoIva } = sacarPrecioIva(precioConDescuento, tieneIva);
+
+  const subtotal = calcularPrecioEnvio(precioConIva, costoEnvio);
+
+  const totalFinal = calcularPrecioFinalConCuotas(subtotal, numeroCuotas);
+
+  return {
+    base:          precioBase,
+    descuentoNivel:   descuentos.descuentoNivel,
+    descuentoCupon:   descuentos.descuentoCupon,
+    descuentoEspecial: descuentos.descuentoEspecial,
+    montoIva,
+    costoEnvio,
+    subtotal,
+    totalFinal,
+    totalPorCuota: numeroCuotas > 1 ? totalFinal / numeroCuotas : totalFinal,
+  };
+}
   return {
     base: precioBase,
     dscto1: r2,
