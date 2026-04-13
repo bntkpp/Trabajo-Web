@@ -3,6 +3,11 @@
 // fecha: no se
 // version: final_v2_BUENO_este_si
 
+import {buscarUsuario, buscarProductos, agregarAlCarrito, procesarPago, obtenerEstadisticas} from "./functions.js";
+
+// Cuando tengamos todas las funciones separadas, hay que hacer una funcion main.js para llamar a todas las funciones
+// y hacer todas las pruebas unitarias sin problemas y queda todo mas ordenado.
+
 var sessData;
 // =====================================
 // funcion principal que hace todo
@@ -490,18 +495,7 @@ function calcularPrecio(precioBase, descuentoNivel, descuentoCupon, descuentoEsp
     totalPorCuota: numeroCuotas > 1 ? totalFinal / numeroCuotas : totalFinal,
   };
 }
-  return {
-    base: precioBase,
-    dscto1: r2,
-    dscto2: r3,
-    dscto3: r4,
-    subtotal: r6,
-    iva: r5,
-    envio: envio,
-    totalCuota: numeroCuotas > 1 ? r / numeroCuotas : r,
-    total: r
-  };
-}
+
 
 // funcion de reporte
 function hacerReporte(type, from, to, data) {
