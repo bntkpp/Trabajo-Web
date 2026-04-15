@@ -1,13 +1,49 @@
 // =====================================
-// funcion principal que hace todo
+// Dividi la funcion doEverything en funciones mas pequeñas y especificas para cada tarea, como buscarUsuario, buscarProductos, agregarAlCarrito, procesarPago y obtenerEstadisticas. Cada funcion ahora se encarga de una sola responsabilidad, lo que mejora la legibilidad y mantenibilidad del codigo. Ademas, cada funcion recibe los parametros necesarios para su tarea especifica y devuelve un resultado a traves de un callback. 
 // =====================================
 
 // Matias Diaz
 
 import { dbUsers, dbProducts } from "./database.js";
 
+// Se separo de la funcion buscarUsuario, porque son lineas de codigo que se pueden hacer aparte y hacen que el codigo se entienda mejor, aparte se puede reutilizar
 
-export function buscarUsuario(dbUsers, email, password, cb) {
+function calcularNivel(puntos) {
+  let nivel = "";
+  if (puntos >= 0 && puntos < 100) {
+    nivel = "bronce";
+  }
+  if (puntos >= 100 && puntos < 200) {
+    nivel = "plata";
+  }
+  if (puntos >= 200 && puntos < 300) {
+    nivel = "oro";
+  }
+  if (puntos >= 300) {
+    nivel = "platino";
+  }
+  return nivel;
+}
+
+function calculcarDescuento(puntos) {
+  var descuento = 0;
+  // descuento por nivel
+  if (foundUser2.puntos >= 0 && foundUser2.puntos < 100) {
+    descuento = 0;
+  }
+  if (foundUser2.puntos >= 100 && foundUser2.puntos < 200) {
+    descuento = 5;
+  }
+  if (foundUser2.puntos >= 200 && foundUser2.puntos < 300) {
+    descuento = 10;
+  }
+  if (foundUser2.puntos >= 300) {
+    descuento = 15;
+  }
+  return descuento
+}
+
+export function buscarUsuario(email, password, cb) {
   // Variables
   let isOk = false;
   let msg = "";
@@ -36,30 +72,22 @@ export function buscarUsuario(dbUsers, email, password, cb) {
       cb({ ok: false, msg: msg, data: null });
       return;
     }
-    // calcular nivel del usuario
-    let nivel = "";
-    if (tempUser.puntos >= 0 && tempUser.puntos < 100) {
-      nivel = "bronce";
-    }
-    if (tempUser.puntos >= 100 && tempUser.puntos < 200) {
-      nivel = "plata";
-    }
-    if (tempUser.puntos >= 200 && tempUser.puntos < 300) {
-      nivel = "oro";
-    }
-    if (tempUser.puntos >= 300) {
-      nivel = "platino";
-    }
+    // Calcular nivel del usuario
+    let nivel = calcularNivel(tempUser.puntos);
     tempUser.nivel = nivel;
     tempUser.ultimoLogin = new Date().toISOString();
-    sessData = { user: tempUser, token: "tkn_" + Math.random().toString(36).substr(2, 9), loginTime: new Date() };
+    sessData = {
+      user: tempUser,
+      token: "tkn_" + Math.random().toString(36).substr(2, 9),
+      loginTime: new Date(),
+    };
     currentU = tempUser;
     cb({ ok: true, msg: "login ok", data: sessData });
     return;
   } else {
-    // incrementar intentos fallidos
+    // Incrementar intentos fallidos
     for (let i = 0; i < dbUsers.length; i++) {
-      if (dbUsers[i].email == email) {
+      if (dbUsers[i].email === email) {
         dbUsers[i].intentos++;
         if (dbUsers[i].intentos >= 3) {
           dbUsers[i].bloqueado = true;
@@ -72,11 +100,11 @@ export function buscarUsuario(dbUsers, email, password, cb) {
   }
 }
 
-export function buscarProductos(dbProducts, query, cat, minP, maxP) {
+export function buscarProductos(dbProducts, query, dat, categoria, cb, precioMin, precioMax) {
   var query = dat;
-  var cat = extraDat;
-  var minP = moreData ? moreData.min : 0;
-  var maxP = moreData ? moreData.max : 999999999;
+  var categoria = extraDat;
+  var precioMin = moreData ? moreData.min : 0;
+  var precioMax = moreData ? moreData.max : 999999999;
   var res = [];
   for (var i = 0; i < dbProducts.length; i++) {
     var prod = dbProducts[i];
@@ -97,12 +125,12 @@ export function buscarProductos(dbProducts, query, cat, minP, maxP) {
     } else {
       match = true;
     }
-    if (cat && cat != "" && cat != null && cat != undefined) {
-      if (prod.cat != cat) {
+    if (categoria && categoria != "" && categoria != null && categoria != undefined) {
+      if (prod.categoria != categoria) {
         match = false;
       }
     }
-    if (prod.prec < minP || prod.prec > maxP) {
+    if (prod.precio < precioMin || prod.precio > precioMax) {
       match = false;
     }
     if (match == true) {
@@ -124,7 +152,7 @@ export function buscarProductos(dbProducts, query, cat, minP, maxP) {
 }
 
 export function agregarAlCarrito(u, prodId, qty, userId2) {
-    // agregar al carrito
+  // agregar al carrito
   var prodId = dat;
   var qty = extraDat;
   var userId2 = moreData;
@@ -175,12 +203,16 @@ export function agregarAlCarrito(u, prodId, qty, userId2) {
   for (var i = 0; i < foundUser.carrito.length; i++) {
     for (var j = 0; j < dbProducts.length; j++) {
       if (dbProducts[j].id == foundUser.carrito[i].prodId) {
-        total = total + (dbProducts[j].prec * foundUser.carrito[i].qty);
+        total = total + dbProducts[j].prec * foundUser.carrito[i].qty;
         break;
       }
     }
   }
-  cb({ ok: true, msg: "producto agregado al carrito", data: { carrito: foundUser.carrito, total: total } });
+  cb({
+    ok: true,
+    msg: "producto agregado al carrito",
+    data: { carrito: foundUser.carrito, total: total },
+  });
   return;
 }
 
@@ -212,39 +244,35 @@ export function procesarPago() {
       if (dbProducts[j].id == foundUser2.carrito[i].prodId) {
         var itemTotal = dbProducts[j].prec * foundUser2.carrito[i].qty;
         subtotal = subtotal + itemTotal;
-        itemsOrden.push({ prod: dbProducts[j].nom, qty: foundUser2.carrito[i].qty, precUnit: dbProducts[j].prec, totalItem: itemTotal });
+        itemsOrden.push({
+          prod: dbProducts[j].nom,
+          qty: foundUser2.carrito[i].qty,
+          precUnit: dbProducts[j].prec,
+          totalItem: itemTotal,
+        });
         break;
       }
     }
   }
   // aplicar descuentos
-  var descuento = 0;
-  var descuentoMonto = 0;
-  // descuento por nivel
-  if (foundUser2.puntos >= 0 && foundUser2.puntos < 100) {
-    descuento = 0;
-  }
-  if (foundUser2.puntos >= 100 && foundUser2.puntos < 200) {
-    descuento = 5;
-  }
-  if (foundUser2.puntos >= 200 && foundUser2.puntos < 300) {
-    descuento = 10;
-  }
-  if (foundUser2.puntos >= 300) {
-    descuento = 15;
-  }
+  var descuento = descuentoMonto(foundUser2.puntos);
+
   // descuento adicional del usuario
   descuento = descuento + foundUser2.descuento;
-  descuentoMonto = subtotal * (descuento / 100);
+  let descuentoMonto = subtotal * (descuento / 100);
   var totalConDescuento = subtotal - descuentoMonto;
-  // calcular iva
+
+  // Calcular iva
   var iva = totalConDescuento * 0.19;
   var totalFinal = totalConDescuento + iva;
   // calcular puntos ganados
   var puntosGanados = Math.floor(totalFinal / 1000);
+
   // crear orden
-  var ordenId = "ORD-" + Date.now();
-  var orden = {
+  var ordenId = "ORD-" + Date.now();  
+
+  // #FALTA CREAR LA BASE DE DATOS DE PEDIDOS
+  var orden = { 
     id: ordenId,
     userId: userId3,
     items: itemsOrden,
@@ -258,9 +286,10 @@ export function procesarPago() {
     direccion: direccion,
     estado: "pendiente",
     puntosGanados: puntosGanados,
-    createdAt: new Date()
+    createdAt: new Date(),
   };
-  // actualizar stock
+
+  // Actualizar stock
   for (var i = 0; i < foundUser2.carrito.length; i++) {
     for (var j = 0; j < dbProducts.length; j++) {
       if (dbProducts[j].id == foundUser2.carrito[i].prodId) {
@@ -279,7 +308,13 @@ export function procesarPago() {
   var pagoOk = false;
   if (metodoPago == "tarjeta") {
     // simular validacion tarjeta
-    if (flag99 && flag99.numero && flag99.numero.length == 16 && flag99.cvv && flag99.cvv.length == 3) {
+    if (
+      flag99 &&
+      flag99.numero &&
+      flag99.numero.length == 16 &&
+      flag99.cvv &&
+      flag99.cvv.length == 3
+    ) {
       pagoOk = true;
     } else {
       cb({ ok: false, msg: "datos de tarjeta invalidos", data: null });
@@ -342,26 +377,34 @@ export function obtenerEstadisticas() {
     if (dbProducts[i].cat == "componentes") totalComponentes++;
     if (dbProducts[i].cat == "muebles") totalMuebles++;
     stockTotal = stockTotal + dbProducts[i].stock;
-    valorInventario = valorInventario + (dbProducts[i].prec * dbProducts[i].stock);
+    valorInventario =
+      valorInventario + dbProducts[i].prec * dbProducts[i].stock;
   }
-  stats.usuarios = { total: totalUsers, activos: totalActivos, bloqueados: totalBloqueados, admin: totalAdmin, clientes: totalClientes, vendedores: totalVendedores };
-  stats.productos = { total: totalProds, activos: totalActivos2, inactivos: totalInactivos, porCategoria: { electronica: totalElectronica, accesorios: totalAccesorios, audio: totalAudio, almacenamiento: totalAlmacenamiento, componentes: totalComponentes, muebles: totalMuebles }, stockTotal: stockTotal, valorInventario: valorInventario };
+  stats.usuarios = {
+    total: totalUsers,
+    activos: totalActivos,
+    bloqueados: totalBloqueados,
+    admin: totalAdmin,
+    clientes: totalClientes,
+    vendedores: totalVendedores,
+  };
+  stats.productos = {
+    total: totalProds,
+    activos: totalActivos2,
+    inactivos: totalInactivos,
+    porCategoria: {
+      electronica: totalElectronica,
+      accesorios: totalAccesorios,
+      audio: totalAudio,
+      almacenamiento: totalAlmacenamiento,
+      componentes: totalComponentes,
+      muebles: totalMuebles,
+    },
+    stockTotal: stockTotal,
+    valorInventario: valorInventario,
+  };
   cb({ ok: true, msg: "ok", data: stats });
   return;
 }
 
-  
-function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
-  // primero verificar usuario
-  var isOk = false;
-  var msg = "";
-  var tempUser = null;
-  var tempPass = null;
-  
 
-
-
-
-
-  cb({ ok: false, msg: "accion no reconocida", data: null });
-}
