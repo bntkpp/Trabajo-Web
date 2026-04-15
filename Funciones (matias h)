@@ -1,1 +1,74 @@
+function procesarCheckout(userId, metodoPago, direccion, datosTarjeta, codigoCupon) {
+  var usr = null;
+  for (var i = 0; i < usuarios.length; i = i + 1) {
+    if (usuarios[i].id == userId) {
+      usr = usuarios[i];
+      break;
+    }
+  }
+  if (usr == null) {
+    return { ok: false, msg: "usuario no encontrado", data: null };
+  }
+  if (!usr.carrito || usr.carrito.length === 0) {
+    return { ok: false, msg: "carrito vacio", data: null };
+  }
 
+  var pagoValido = false;
+  if (metodoPago == "tarjeta") pagoValido = true;
+  if (metodoPago == "transferencia") pagoValido = true;
+  if (metodoPago == "efectivo") pagoValido = true;
+
+  if (!pagoValido) {
+    return { ok: false, msg: "metodo de pago no valido", data: null };
+  }
+  if (metodoPago == "tarjeta") {
+    if (!datosTarjeta) {
+      return { ok: false, msg: "datos de tarjeta invalidos", data: null };
+    }
+    if (!datosTarjeta.numero || datosTarjeta.numero.length != 16) {
+      return { ok: false, msg: "numero tarjeta invalido", data: null };
+    }
+    if (!datosTarjeta.cvv) {
+      return { ok: false, msg: "cvv invalido", data: null };
+    }
+  }
+
+  // reviso stock
+  for (var j = 0; j < usr.carrito.length; j++) {
+    var item = usr.carrito[j];
+    var prod = buscarProductoPorId(item.prodId);
+    if (!prod || !prod.activo) {
+      return { ok: false, msg: "producto no disponible", data: null };
+    }
+    if (prod.stock < item.cant) {
+      return { ok: false, msg: "stock insuficiente", data: null };
+    }
+  }
+  var descuentoCuponAplicar = 0;
+  if (codigoCupon) {
+    var subtotal = calcularSubtotalCarro(usr.carrito).subtotal;
+    var respCupon = aplicarCupon(codigoCupon, usr.id, subtotal);
+    if (!respCupon.ok) {
+      return { ok: false, msg: respCupon.msg, data: null };
+    }
+    descuentoCuponAplicar = respCupon.data.descuento;
+  }
+  var datosCompra = calcularTotalCompra(usr, usr.carrito, descuentoCuponAplicar);
+  var nuevaOrden = {
+    id: "ORD-" + Date.now(),
+    userId: usr.id,
+    items: datosCompra.items,
+    total: datosCompra.total,
+    fecha: new Date()
+  };
+  // descuento stock
+  for (var k = 0; k < usr.carrito.length; k++) {
+    var p = buscarProductoPorId(usr.carrito[k].prodId);
+    p.stock = p.stock - usr.carrito[k].cant;
+  }
+  usr.puntos = usr.puntos + datosCompra.puntosGanados;
+  usr.historial.push(nuevaOrden);
+  usr.carrito = [];
+  return { ok: true, msg: "ok", data: nuevaOrden };
+}
+/////////////////////////////////////
