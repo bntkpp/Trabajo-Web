@@ -439,92 +439,69 @@ function v(cosa, tipo) {
   return r;
 }
 
-// calcular precio con todo
-
-// Benjamin Fernandez
-function calcularPrecio(precioBase, descuentoNivel, descuentoCupon, descuentoEspecial, iva, envio, numeroCuotas) {
-  var r = 0, r2 = 0, r3 = 0, r4 = 0, r5 = 0, r6 = 0, r7 = 0;
-  r = precioBase;
-  if (descuentoNivel > 0) {
-    r2 = r * (descuentoNivel / 100);
-    r = r - r2;
-  }
-  if (descuentoCupon > 0) {
-    r3 = r * (descuentoCupon  / 100);
-    r = r - r3;
-  }
-  if (descuentoEspecial > 0) {
-    r4 = r * (descuentoEspecial / 100);
-    r = r - r4;
-  }
-  if (iva == true) {
-    r5 = r * 0.19;
-    r = r + r5;
-  }
-  if (envio > 0) {
-    r = r + envio;
-  }
-  r6 = r;
-  if (numeroCuotas > 1) {
-    // agregar interes segun cuotas
-    if (numeroCuotas == 2) {
-      r7 = r * 0.02;
-      r = r + r7;
-    }
-    if (numeroCuotas == 3) {
-      r7 = r * 0.04;
-      r = r + r7;
-    }
-    if (numeroCuotas == 6) {
-      r7 = r * 0.08;
-      r = r + r7;
-    }
-    if (numeroCuotas == 12) {
-      r7 = r * 0.15;
-      r = r + r7;
-    }
-    if (numeroCuotas == 24) {
-      r7 = r * 0.28;
-      r = r + r7;
-    }
-    if (numeroCuotas == 36) {
-      r7 = r * 0.45;
-      r = r + r7;
-    }
-  }
+function calcularDescuento(precio, descuentoNivel, descuentoCupon, descuentoEspecial) {
+  const montoDescuentoN = precio * (descuentoNivel / 100);
+  const montoDescuentoC = (precio - montoDescuentoN) * (descuentoCupon / 100);
+  const montoDescuentoE = (precio - montoDescuentoN - montoDescuentoC) * (descuentoEspecial / 100);
   return {
-    base: precioBase,
-    dscto1: r2,
-    dscto2: r3,
-    dscto3: r4,
-    subtotal: r6,
-    iva: r5,
-    envio: envio,
-    totalCuota: numeroCuotas > 1 ? r / numeroCuotas : r,
-    total: r
+    precioConDescuento: precio - montoDescuentoN - montoDescuentoC - montoDescuentoE,
+    descuentoCupon: montoDescuentoC,
+    descuentoEspecial: montoDescuentoE,
+    descuentoNivel: montoDescuentoN
+  };
+}
+function sacarPrecioIva(precio, tieneIva) {
+  let montoIva = tieneIva ? precio * 0.19 : 0;
+  return { precioConIva: precio + montoIva, montoIva};
+}
+function calcularPrecioEnvio(precio, envio) {
+  if(envio > 0) {
+    return precio + envio;
+  }
+  return precio;
+}
+
+const calcularPrecioFinalConCuotas = (precio, numeroCuotas) => {
+  let precioFinal = precio;
+  const intereses = { 2: 1.02, 3: 1.04, 6: 1.08, 12: 1.15, 24: 1.28, 36: 1.45 };
+  if (numeroCuotas > 1) {
+    if (numeroCuotas in intereses) {
+      precioFinal = precio * intereses[numeroCuotas];
+    }
+  }
+  return precioFinal;
+}
+function calcularPrecio(precioBase, descuentoNivel, descuentoCupon, descuentoEspecial, tieneIva, costoEnvio, numeroCuotas) {
+  
+  const { precioConDescuento, ...descuentos } = calcularDescuento(
+    precioBase, descuentoNivel, descuentoCupon, descuentoEspecial
+  );
+
+  const { precioConIva, montoIva } = sacarPrecioIva(precioConDescuento, tieneIva);
+
+  const subtotal = calcularPrecioEnvio(precioConIva, costoEnvio);
+
+  const totalFinal = calcularPrecioFinalConCuotas(subtotal, numeroCuotas);
+
+  return {
+    base:          precioBase,
+    descuentoNivel:   descuentos.descuentoNivel,
+    descuentoCupon:   descuentos.descuentoCupon,
+    descuentoEspecial: descuentos.descuentoEspecial,
+    montoIva,
+    costoEnvio,
+    subtotal,
+    totalFinal,
+    totalPorCuota: numeroCuotas > 1 ? totalFinal / numeroCuotas : totalFinal,
   };
 }
 
+
 // funcion de reporte
-function makeReport(type, from, to, data, data2, data3, opts) {
-  var report = "";
-  var lines = [];
-  var totalGeneral = 0;
-  var totalGeneral2 = 0;
-  var totalGeneral3 = 0;
-  var count = 0;
-  var count2 = 0;
-  var count3 = 0;
-  var avg = 0;
-  var avg2 = 0;
-  var avg3 = 0;
-  var max = 0;
-  var max2 = 0;
-  var max3 = 0;
-  var min = 999999999;
-  var min2 = 999999999;
-  var min3 = 999999999;
-  
+function hacerReporte(type, from, to, data) {
+  var report = "", lines = [], totalGeneral = 0, totalGeneral2 = 0, totalGeneral3 = 0, count = 0, count2 = 0, count3 = 0, avg = 0, avg2 = 0, avg3 = 0, max = 0, max2 = 0, max3 = 0, 
+  min = 999999999, min2 = 999999999, min3 = 999999999;
+
   if (type == "ventas") {
     report += "=== REPORTE DE VENTAS ===\n";
     report += "Desde: " + from + "\n";
