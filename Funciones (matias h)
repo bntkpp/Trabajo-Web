@@ -135,32 +135,132 @@ export function aplicarCupon(codigo, userId, totalCarrito, cb) {
   return;
 }
 ////////////////////////////////////////////////
-function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
-  var resultado;
-
-  if (action === "login") {
-    resultado = hacerLogin(u, p2);
-
-  } else if (action === "buscarProductos") {
-    resultado = buscarProductos(dat, extraDat, moreData);
-
-  } else if (action === "addCart") {
-    resultado = agregarAlCarrito(moreData, dat, extraDat);
-
-  } else if (action === "checkout") {
-    resultado = procesarCheckout(dat, extraDat, moreData, flag99, null);
-
-  } else if (action === "aplicarCupon") {
-    resultado = aplicarCupon(dat.codigo, dat.userId, dat.total);
-
+// funcion principal (la que pide el profe)
+export function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
+  // renombro para entender mejor
+  var email = u;
+  var pass = p2;
+  var acc = action;
+  var data = dat;
+  var extra = extraDat;
+  var more = moreData;
+  var opts = flag99;
+  var callback = cb;
+  
+  // dependiendo de la accion llamo a una u otra funcion
+  if (acc == "login") {
+    buscarUsuario(email, pass, callback);
+  } else if (acc == "buscarProductos") {
+    buscarProductos(dbProducts, data, data, extra, callback, more ? more.min : 0, more ? more.max : 999999999);
+  } else if (acc == "addCart") {
+    // data: prodId, extra: cantidad, more: userId
+    agregarAlCarrito(null, data, extra, more, callback);
+  } else if (acc == "checkout") {
+    procesarPago(data, extra, more, opts, callback);
+  } else if (acc == "getStats") {
+    obtenerEstadisticas(callback);
+  } else if (acc == "aplicarCupon") {
+    // data: { codigo, userId, total }
+    aplicarCupon(data.codigo, data.userId, data.total, callback);
+  } else if (acc == "agregarWishlist") {
+    agregarAWishlist(data.userId, data.prodId, callback);
+  } else if (acc == "quitarWishlist") {
+    quitarDeWishlist(data.userId, data.prodId, callback);
+  } else if (acc == "obtenerWishlist") {
+    obtenerWishlist(data.userId, callback);
+  } else if (acc == "agregarReview") {
+    agregarReview(data.prodId, data.userId, data.rating, data.comentario, callback);
+  } else if (acc == "obtenerReviews") {
+    obtenerReviews(data.prodId, callback);
+  } else if (acc == "likeReview") {
+    darLikeReview(data.prodId, data.reviewId, callback);
   } else {
-    resultado = { ok: false, msg: "accion no valida", data: null };
+    callback({ ok: false, msg: "accion no reconocida", data: null });
   }
-
-  if (cb) {
-    cb(resultado);
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+// wishlist (esto lo agregue yo porque me parecio util)
+export function agregarAWishlist(userId, prodId, cb) {
+  var foundUser = null;
+  for (var i = 0; i < dbUsers.length; i++) {
+    if (dbUsers[i].id == userId) {
+      foundUser = dbUsers[i];
+      break;
+    }
   }
-
-  return resultado;
+  
+  if (foundUser == null) {
+    cb({ ok: false, msg: "usuario no encontrado", data: null });
+    return;
+  }
+  
+  if (!foundUser.wishlist) {
+    foundUser.wishlist = [];
+  }
+  
+  // reviso si ya esta
+  for (var i = 0; i < foundUser.wishlist.length; i++) {
+    if (foundUser.wishlist[i] == prodId) {
+      cb({ ok: false, msg: "producto ya en wishlist", data: foundUser.wishlist });
+      return;
+    }
+  }
+  
+  foundUser.wishlist.push(prodId);
+  cb({ ok: true, msg: "agregado a wishlist", data: foundUser.wishlist });
+  return;
 }
 
+export function quitarDeWishlist(userId, prodId, cb) {
+  var foundUser = null;
+  for (var i = 0; i < dbUsers.length; i++) {
+    if (dbUsers[i].id == userId) {
+      foundUser = dbUsers[i];
+      break;
+    }
+  }
+  
+  if (foundUser == null) {
+    cb({ ok: false, msg: "usuario no encontrado", data: null });
+    return;
+  }
+  
+  if (!foundUser.wishlist) {
+    foundUser.wishlist = [];
+  }
+  
+  var idx = -1;
+  for (var i = 0; i < foundUser.wishlist.length; i++) {
+    if (foundUser.wishlist[i] == prodId) {
+      idx = i;
+      break;
+    }
+  }
+  
+  if (idx == -1) {
+    cb({ ok: false, msg: "producto no en wishlist", data: foundUser.wishlist });
+    return;
+  }
+  
+  foundUser.wishlist.splice(idx, 1);
+  cb({ ok: true, msg: "removido de wishlist", data: foundUser.wishlist });
+  return;
+}
+
+export function obtenerWishlist(userId, cb) {
+  var foundUser = null;
+  for (var i = 0; i < dbUsers.length; i++) {
+    if (dbUsers[i].id == userId) {
+      foundUser = dbUsers[i];
+      break;
+    }
+  }
+  
+  if (foundUser == null) {
+    cb({ ok: false, msg: "usuario no encontrado", data: null });
+    return;
+  }
+  
+  cb({ ok: true, msg: "ok", data: foundUser.wishlist || [] });
+  return;
+}
