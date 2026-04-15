@@ -72,58 +72,67 @@ function procesarCheckout(userId, metodoPago, direccion, datosTarjeta, codigoCup
   return { ok: true, msg: "ok", data: nuevaOrden };
 }
 /////////////////////////////////////
-function aplicarCupon(codigo, userId, totalCarrito) {
-  var cupon = null;
-
+// cupones de descuento (esto lo copie de un video)//////////
+export function aplicarCupon(codigo, userId, totalCarrito, cb) {
+  // busco el cupon en la lista de cupones
+  var cupones = [
+    { codigo: "DESC10", tipo: "porcentaje", valor: 10, minCompra: 50000, usos: 45, maxUsos: 100, activo: true, expira: "2024-12-31" },
+    { codigo: "DESC20", tipo: "porcentaje", valor: 20, minCompra: 100000, usos: 50, maxUsos: 50, activo: true, expira: "2024-06-30" },
+    { codigo: "BIENVENIDO", tipo: "fijo", valor: 5000, minCompra: 20000, usos: 523, maxUsos: 1000, activo: true, expira: "2025-12-31" }
+  ];
+  
+  var cuponEncontrado = null;
   for (var i = 0; i < cupones.length; i++) {
     if (cupones[i].codigo == codigo) {
-      cupon = cupones[i];
+      cuponEncontrado = cupones[i];
       break;
     }
   }
-
-  if (cupon == null) {
-    return { ok: false, msg: "cupon no existe", data: { descuento: 0 } };
+  
+  if (cuponEncontrado == null) {
+    cb({ ok: false, msg: "cupon no existe", data: { descuento: 0 } });
+    return;
   }
-
-  if (!cupon.activo) {
-    return { ok: false, msg: "cupon inactivo", data: { descuento: 0 } };
+  
+  if (cuponEncontrado.activo == false) {
+    cb({ ok: false, msg: "cupon inactivo", data: { descuento: 0 } });
+    return;
   }
-
+  
   var hoy = new Date();
-  var exp = new Date(cupon.expira);
-
-  if (hoy > exp) {
-    return { ok: false, msg: "cupon expirado", data: { descuento: 0 } };
+  var expiracion = new Date(cuponEncontrado.expira);
+  if (hoy > expiracion) {
+    cb({ ok: false, msg: "cupon expirado", data: { descuento: 0 } });
+    return;
   }
-
-  if (cupon.usos >= cupon.maxUsos) {
-    return { ok: false, msg: "cupon agotado", data: { descuento: 0 } };
+  
+  if (cuponEncontrado.usos >= cuponEncontrado.maxUsos) {
+    cb({ ok: false, msg: "cupon agotado", data: { descuento: 0 } });
+    return;
   }
-
-  if (totalCarrito < cupon.minCompra) {
-    return { ok: false, msg: "no cumple minimo", data: { descuento: 0 } };
+  
+  if (totalCarrito < cuponEncontrado.minCompra) {
+    cb({ ok: false, msg: "monto minimo no alcanzado", data: { descuento: 0 } });
+    return;
   }
-
+  
   var descuento = 0;
-
-  if (cupon.tipo == "porcentaje") {
-    descuento = (totalCarrito * cupon.valor) / 100;
+  if (cuponEncontrado.tipo == "porcentaje") {
+    descuento = (totalCarrito * cuponEncontrado.valor) / 100;
   } else {
-    descuento = cupon.valor;
+    descuento = cuponEncontrado.valor; // asumo que es fijo
   }
-
+  
+  // que no descuente mas que el total
   if (descuento > totalCarrito) {
     descuento = totalCarrito;
   }
-
-  cupon.usos++;
-
-  return {
-    ok: true,
-    msg: "aplicado",
-    data: { descuento: descuento }
-  };
+  
+  // sumo un uso
+  cuponEncontrado.usos = cuponEncontrado.usos + 1;
+  
+  cb({ ok: true, msg: "cupon aplicado", data: { descuento: descuento, tipo: cuponEncontrado.tipo } });
+  return;
 }
 ////////////////////////////////////////////////
 function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
