@@ -72,3 +72,86 @@ function procesarCheckout(userId, metodoPago, direccion, datosTarjeta, codigoCup
   return { ok: true, msg: "ok", data: nuevaOrden };
 }
 /////////////////////////////////////
+function aplicarCupon(codigo, userId, totalCarrito) {
+  var cupon = null;
+
+  for (var i = 0; i < cupones.length; i++) {
+    if (cupones[i].codigo == codigo) {
+      cupon = cupones[i];
+      break;
+    }
+  }
+
+  if (cupon == null) {
+    return { ok: false, msg: "cupon no existe", data: { descuento: 0 } };
+  }
+
+  if (!cupon.activo) {
+    return { ok: false, msg: "cupon inactivo", data: { descuento: 0 } };
+  }
+
+  var hoy = new Date();
+  var exp = new Date(cupon.expira);
+
+  if (hoy > exp) {
+    return { ok: false, msg: "cupon expirado", data: { descuento: 0 } };
+  }
+
+  if (cupon.usos >= cupon.maxUsos) {
+    return { ok: false, msg: "cupon agotado", data: { descuento: 0 } };
+  }
+
+  if (totalCarrito < cupon.minCompra) {
+    return { ok: false, msg: "no cumple minimo", data: { descuento: 0 } };
+  }
+
+  var descuento = 0;
+
+  if (cupon.tipo == "porcentaje") {
+    descuento = (totalCarrito * cupon.valor) / 100;
+  } else {
+    descuento = cupon.valor;
+  }
+
+  if (descuento > totalCarrito) {
+    descuento = totalCarrito;
+  }
+
+  cupon.usos++;
+
+  return {
+    ok: true,
+    msg: "aplicado",
+    data: { descuento: descuento }
+  };
+}
+////////////////////////////////////////////////
+function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
+  var resultado;
+
+  if (action === "login") {
+    resultado = hacerLogin(u, p2);
+
+  } else if (action === "buscarProductos") {
+    resultado = buscarProductos(dat, extraDat, moreData);
+
+  } else if (action === "addCart") {
+    resultado = agregarAlCarrito(moreData, dat, extraDat);
+
+  } else if (action === "checkout") {
+    resultado = procesarCheckout(dat, extraDat, moreData, flag99, null);
+
+  } else if (action === "aplicarCupon") {
+    resultado = aplicarCupon(dat.codigo, dat.userId, dat.total);
+
+  } else {
+    resultado = { ok: false, msg: "accion no valida", data: null };
+  }
+
+  if (cb) {
+    cb(resultado);
+  }
+
+  return resultado;
+}
+
