@@ -253,3 +253,7 @@ export const dbProducts = [
     createdAt: "2023-05-15"
   }
 ];
+
+export const dbOrders = [
+
+];
