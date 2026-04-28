@@ -495,8 +495,8 @@ function calcularPrecio(precioBase, descuentoNivel, descuentoCupon, descuentoEsp
     totalPorCuota: numeroCuotas > 1 ? totalFinal / numeroCuotas : totalFinal,
   };
 }
-
-
+  
+{
 // funcion de reporte
 function hacerReporte(type, from, to, data) {
   var report = "", lines = [], totalGeneral = 0, totalGeneral2 = 0, totalGeneral3 = 0, count = 0, count2 = 0, count3 = 0, avg = 0, avg2 = 0, avg3 = 0, max = 0, max2 = 0, max3 = 0, 
