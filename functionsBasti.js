@@ -1,5 +1,5 @@
 
-// Se mantuvo solo una funcion, para borrar la duplicacion de código, y se puso nombre más descriptivo.
+// Desde linea la 1064. Se mantuvo solo una funcion, para borrar la duplicacion de código, y se puso nombre más descriptivo.
 function paginate(items, page, pageSize) {
   const totalItems = items.length;
   const totalPages = Math.ceil(totalItems / pageSize);
@@ -27,3 +27,4 @@ function sortByField(items, fieldName, sortOrder) {
     return 0;
   });
 }
+// Hasta linea 1136
