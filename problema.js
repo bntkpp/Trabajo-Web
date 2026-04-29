@@ -3,15 +3,7 @@
 // fecha: no se
 // version: final_v2_BUENO_este_si
 
-// Estas funciones las saque de doEverything y las movi a functions.js
-// cada una se encarga de una sola cosa en vez de que todo lo haga doEverything
-import {
-  buscarUsuario,
-  buscarProductos,
-  agregarAlCarrito,
-  procesarPago,
-  obtenerEstadisticas,
-} from './functions.js';
+import {buscarUsuario, buscarProductos, agregarAlCarrito, procesarPago, obtenerEstadisticas} from "./functions.js";
 
 // Cuando tengamos todas las funciones separadas, hay que hacer una funcion main.js para llamar a todas las funciones
 // y hacer todas las pruebas unitarias sin problemas y queda todo mas ordenado.
@@ -19,273 +11,35 @@ import {
 var sessData;
 // =====================================
 // funcion principal que hace todo
-// Esta era la funcion original. Tenia login, busqueda de productos, carrito,
-// pago y estadisticas todo mezclado en un solo lugar con un parametro "action"
-// para saber que hacer. Se separo cada bloque en su propia funcion en functions.js
 // =====================================
 function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
   // primero verificar usuario
   var isOk = false;
   let u, p2, action, dat, extraDat, moreData, flag99, cb;
-  var msg = '';
+  var msg = "";
   var tempUser = null;
   var dbUsers = [
-    {
-      id: 1,
-      nombre: 'Juan Perez',
-      email: 'juan@mail.com',
-      pass: '1234',
-      tipo: 'admin',
-      puntos: 150,
-      descuento: 0,
-      historial: [],
-      carrito: [],
-      wishlist: [],
-      direcciones: [],
-      metodoPago: [],
-      activo: true,
-      intentos: 0,
-      bloqueado: false,
-      ultimoLogin: null,
-      createdAt: '2023-01-01',
-      updatedAt: '2023-06-01',
-    },
-    {
-      id: 2,
-      nombre: 'Maria Lopez',
-      email: 'maria@mail.com',
-      pass: 'abcd',
-      tipo: 'cliente',
-      puntos: 80,
-      descuento: 5,
-      historial: [],
-      carrito: [],
-      wishlist: [],
-      direcciones: [],
-      metodoPago: [],
-      activo: true,
-      intentos: 0,
-      bloqueado: false,
-      ultimoLogin: null,
-      createdAt: '2023-02-01',
-      updatedAt: '2023-06-15',
-    },
-    {
-      id: 3,
-      nombre: 'Pedro Gonzalez',
-      email: 'pedro@mail.com',
-      pass: 'pass123',
-      tipo: 'vendedor',
-      puntos: 200,
-      descuento: 10,
-      historial: [],
-      carrito: [],
-      wishlist: [],
-      direcciones: [],
-      metodoPago: [],
-      activo: true,
-      intentos: 0,
-      bloqueado: false,
-      ultimoLogin: null,
-      createdAt: '2023-03-01',
-      updatedAt: '2023-07-01',
-    },
-    {
-      id: 4,
-      nombre: 'Ana Martinez',
-      email: 'ana@mail.com',
-      pass: 'ana2024',
-      tipo: 'cliente',
-      puntos: 50,
-      descuento: 0,
-      historial: [],
-      carrito: [],
-      wishlist: [],
-      direcciones: [],
-      metodoPago: [],
-      activo: false,
-      intentos: 3,
-      bloqueado: true,
-      ultimoLogin: null,
-      createdAt: '2023-04-01',
-      updatedAt: '2023-07-10',
-    },
-    {
-      id: 5,
-      nombre: 'Carlos Ruiz',
-      email: 'carlos@mail.com',
-      pass: 'carlos99',
-      tipo: 'cliente',
-      puntos: 300,
-      descuento: 15,
-      historial: [],
-      carrito: [],
-      wishlist: [],
-      direcciones: [],
-      metodoPago: [],
-      activo: true,
-      intentos: 0,
-      bloqueado: false,
-      ultimoLogin: null,
-      createdAt: '2023-05-01',
-      updatedAt: '2023-08-01',
-    },
+    { id: 1, nombre: "Juan Perez", email: "juan@mail.com", pass: "1234", tipo: "admin", puntos: 150, descuento: 0, historial: [], carrito: [], wishlist: [], direcciones: [], metodoPago: [], activo: true, intentos: 0, bloqueado: false, ultimoLogin: null, createdAt: "2023-01-01", updatedAt: "2023-06-01" },
+    { id: 2, nombre: "Maria Lopez", email: "maria@mail.com", pass: "abcd", tipo: "cliente", puntos: 80, descuento: 5, historial: [], carrito: [], wishlist: [], direcciones: [], metodoPago: [], activo: true, intentos: 0, bloqueado: false, ultimoLogin: null, createdAt: "2023-02-01", updatedAt: "2023-06-15" },
+    { id: 3, nombre: "Pedro Gonzalez", email: "pedro@mail.com", pass: "pass123", tipo: "vendedor", puntos: 200, descuento: 10, historial: [], carrito: [], wishlist: [], direcciones: [], metodoPago: [], activo: true, intentos: 0, bloqueado: false, ultimoLogin: null, createdAt: "2023-03-01", updatedAt: "2023-07-01" },
+    { id: 4, nombre: "Ana Martinez", email: "ana@mail.com", pass: "ana2024", tipo: "cliente", puntos: 50, descuento: 0, historial: [], carrito: [], wishlist: [], direcciones: [], metodoPago: [], activo: false, intentos: 3, bloqueado: true, ultimoLogin: null, createdAt: "2023-04-01", updatedAt: "2023-07-10" },
+    { id: 5, nombre: "Carlos Ruiz", email: "carlos@mail.com", pass: "carlos99", tipo: "cliente", puntos: 300, descuento: 15, historial: [], carrito: [], wishlist: [], direcciones: [], metodoPago: [], activo: true, intentos: 0, bloqueado: false, ultimoLogin: null, createdAt: "2023-05-01", updatedAt: "2023-08-01" }
   ];
   var dbProducts = [
-    {
-      id: 101,
-      nom: 'Laptop Pro 15',
-      cat: 'electronica',
-      prec: 1200000,
-      stock: 5,
-      desc: 'Laptop de alto rendimiento',
-      rating: 4.5,
-      reviews: [],
-      vendedor: 3,
-      imgs: ['img1.jpg', 'img2.jpg'],
-      tags: ['laptop', 'computador', 'pro'],
-      activo: true,
-      createdAt: '2023-01-15',
-    },
-    {
-      id: 102,
-      nom: 'Mouse Inalambrico',
-      cat: 'accesorios',
-      prec: 25000,
-      stock: 50,
-      desc: 'Mouse ergonomico inalambrico',
-      rating: 4.0,
-      reviews: [],
-      vendedor: 3,
-      imgs: ['img3.jpg'],
-      tags: ['mouse', 'inalambrico'],
-      activo: true,
-      createdAt: '2023-01-20',
-    },
-    {
-      id: 103,
-      nom: 'Teclado Mecanico RGB',
-      cat: 'accesorios',
-      prec: 85000,
-      stock: 20,
-      desc: 'Teclado mecanico con iluminacion RGB',
-      rating: 4.8,
-      reviews: [],
-      vendedor: 3,
-      imgs: ['img4.jpg', 'img5.jpg'],
-      tags: ['teclado', 'mecanico', 'rgb'],
-      activo: true,
-      createdAt: '2023-02-01',
-    },
-    {
-      id: 104,
-      nom: 'Monitor 4K 27"',
-      cat: 'electronica',
-      prec: 450000,
-      stock: 8,
-      desc: 'Monitor 4K con HDR',
-      rating: 4.6,
-      reviews: [],
-      vendedor: 3,
-      imgs: ['img6.jpg'],
-      tags: ['monitor', '4k'],
-      activo: true,
-      createdAt: '2023-02-15',
-    },
-    {
-      id: 105,
-      nom: 'Auriculares Bluetooth',
-      cat: 'audio',
-      prec: 75000,
-      stock: 30,
-      desc: 'Auriculares con cancelacion de ruido',
-      rating: 4.3,
-      reviews: [],
-      vendedor: 3,
-      imgs: ['img7.jpg'],
-      tags: ['auriculares', 'bluetooth'],
-      activo: true,
-      createdAt: '2023-03-01',
-    },
-    {
-      id: 106,
-      nom: 'Webcam HD 1080p',
-      cat: 'accesorios',
-      prec: 45000,
-      stock: 15,
-      desc: 'Webcam para videoconferencias',
-      rating: 4.1,
-      reviews: [],
-      vendedor: 3,
-      imgs: ['img8.jpg'],
-      tags: ['webcam', 'camara'],
-      activo: true,
-      createdAt: '2023-03-15',
-    },
-    {
-      id: 107,
-      nom: 'SSD 1TB',
-      cat: 'almacenamiento',
-      prec: 95000,
-      stock: 25,
-      desc: 'SSD de alta velocidad',
-      rating: 4.7,
-      reviews: [],
-      vendedor: 3,
-      imgs: ['img9.jpg'],
-      tags: ['ssd', 'almacenamiento'],
-      activo: true,
-      createdAt: '2023-04-01',
-    },
-    {
-      id: 108,
-      nom: 'Memoria RAM 16GB',
-      cat: 'componentes',
-      prec: 65000,
-      stock: 40,
-      desc: 'RAM DDR4 3200MHz',
-      rating: 4.4,
-      reviews: [],
-      vendedor: 3,
-      imgs: ['img10.jpg'],
-      tags: ['ram', 'memoria'],
-      activo: true,
-      createdAt: '2023-04-15',
-    },
-    {
-      id: 109,
-      nom: 'Silla Gamer',
-      cat: 'muebles',
-      prec: 350000,
-      stock: 10,
-      desc: 'Silla ergonomica para gaming',
-      rating: 4.2,
-      reviews: [],
-      vendedor: 3,
-      imgs: ['img11.jpg'],
-      tags: ['silla', 'gamer'],
-      activo: false,
-      createdAt: '2023-05-01',
-    },
-    {
-      id: 110,
-      nom: 'Hub USB-C 7 en 1',
-      cat: 'accesorios',
-      prec: 38000,
-      stock: 60,
-      desc: 'Hub multipuerto USB-C',
-      rating: 3.9,
-      reviews: [],
-      vendedor: 3,
-      imgs: ['img12.jpg'],
-      tags: ['hub', 'usb'],
-      activo: true,
-      createdAt: '2023-05-15',
-    },
+    { id: 101, nom: "Laptop Pro 15", cat: "electronica", prec: 1200000, stock: 5, desc: "Laptop de alto rendimiento", rating: 4.5, reviews: [], vendedor: 3, imgs: ["img1.jpg", "img2.jpg"], tags: ["laptop", "computador", "pro"], activo: true, createdAt: "2023-01-15" },
+    { id: 102, nom: "Mouse Inalambrico", cat: "accesorios", prec: 25000, stock: 50, desc: "Mouse ergonomico inalambrico", rating: 4.0, reviews: [], vendedor: 3, imgs: ["img3.jpg"], tags: ["mouse", "inalambrico"], activo: true, createdAt: "2023-01-20" },
+    { id: 103, nom: "Teclado Mecanico RGB", cat: "accesorios", prec: 85000, stock: 20, desc: "Teclado mecanico con iluminacion RGB", rating: 4.8, reviews: [], vendedor: 3, imgs: ["img4.jpg", "img5.jpg"], tags: ["teclado", "mecanico", "rgb"], activo: true, createdAt: "2023-02-01" },
+    { id: 104, nom: "Monitor 4K 27\"", cat: "electronica", prec: 450000, stock: 8, desc: "Monitor 4K con HDR", rating: 4.6, reviews: [], vendedor: 3, imgs: ["img6.jpg"], tags: ["monitor", "4k"], activo: true, createdAt: "2023-02-15" },
+    { id: 105, nom: "Auriculares Bluetooth", cat: "audio", prec: 75000, stock: 30, desc: "Auriculares con cancelacion de ruido", rating: 4.3, reviews: [], vendedor: 3, imgs: ["img7.jpg"], tags: ["auriculares", "bluetooth"], activo: true, createdAt: "2023-03-01" },
+    { id: 106, nom: "Webcam HD 1080p", cat: "accesorios", prec: 45000, stock: 15, desc: "Webcam para videoconferencias", rating: 4.1, reviews: [], vendedor: 3, imgs: ["img8.jpg"], tags: ["webcam", "camara"], activo: true, createdAt: "2023-03-15" },
+    { id: 107, nom: "SSD 1TB", cat: "almacenamiento", prec: 95000, stock: 25, desc: "SSD de alta velocidad", rating: 4.7, reviews: [], vendedor: 3, imgs: ["img9.jpg"], tags: ["ssd", "almacenamiento"], activo: true, createdAt: "2023-04-01" },
+    { id: 108, nom: "Memoria RAM 16GB", cat: "componentes", prec: 65000, stock: 40, desc: "RAM DDR4 3200MHz", rating: 4.4, reviews: [], vendedor: 3, imgs: ["img10.jpg"], tags: ["ram", "memoria"], activo: true, createdAt: "2023-04-15" },
+    { id: 109, nom: "Silla Gamer", cat: "muebles", prec: 350000, stock: 10, desc: "Silla ergonomica para gaming", rating: 4.2, reviews: [], vendedor: 3, imgs: ["img11.jpg"], tags: ["silla", "gamer"], activo: false, createdAt: "2023-05-01" },
+    { id: 110, nom: "Hub USB-C 7 en 1", cat: "accesorios", prec: 38000, stock: 60, desc: "Hub multipuerto USB-C", rating: 3.9, reviews: [], vendedor: 3, imgs: ["img12.jpg"], tags: ["hub", "usb"], activo: true, createdAt: "2023-05-15" }
   ];
 
-  // este bloque se movio a buscarUsuario() en functions.js
-  if (action == 'login') {
+  // buscar usuario en la db
+  if (action == "login") {
     for (var i = 0; i < dbUsers.length; i++) {
       if (dbUsers[i].email == u && dbUsers[i].pass == p2) {
         isOk = true;
@@ -295,40 +49,36 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
     }
     if (isOk == true) {
       if (tempUser.bloqueado == true) {
-        msg = 'usuario bloqueado';
+        msg = "usuario bloqueado";
         isOk = false;
         cb({ ok: false, msg: msg, data: null });
         return;
       }
       if (tempUser.activo == false) {
-        msg = 'usuario inactivo';
+        msg = "usuario inactivo";
         isOk = false;
         cb({ ok: false, msg: msg, data: null });
         return;
       }
       // calcular nivel del usuario
-      var nivel = '';
+      var nivel = "";
       if (tempUser.puntos >= 0 && tempUser.puntos < 100) {
-        nivel = 'bronce';
+        nivel = "bronce";
       }
       if (tempUser.puntos >= 100 && tempUser.puntos < 200) {
-        nivel = 'plata';
+        nivel = "plata";
       }
       if (tempUser.puntos >= 200 && tempUser.puntos < 300) {
-        nivel = 'oro';
+        nivel = "oro";
       }
       if (tempUser.puntos >= 300) {
-        nivel = 'platino';
+        nivel = "platino";
       }
       tempUser.nivel = nivel;
       tempUser.ultimoLogin = new Date().toISOString();
-      sessData = {
-        user: tempUser,
-        token: 'tkn_' + Math.random().toString(36).substr(2, 9),
-        loginTime: new Date(),
-      };
+      sessData = { user: tempUser, token: "tkn_" + Math.random().toString(36).substr(2, 9), loginTime: new Date() };
       currentU = tempUser;
-      cb({ ok: true, msg: 'login ok', data: sessData });
+      cb({ ok: true, msg: "login ok", data: sessData });
       return;
     } else {
       // incrementar intentos fallidos
@@ -341,13 +91,13 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
           break;
         }
       }
-      cb({ ok: false, msg: 'credenciales invalidas', data: null });
+      cb({ ok: false, msg: "credenciales invalidas", data: null });
       return;
     }
   }
 
-  // este bloque se movio a buscarProductos() en functions.js
-  if (action == 'buscarProductos') {
+  // buscar productos
+  if (action == "buscarProductos") {
     var query = dat;
     var cat = extraDat;
     var minP = moreData ? moreData.min : 0;
@@ -357,7 +107,7 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
       var prod = dbProducts[i];
       var match = false;
       if (prod.activo == false) continue;
-      if (query && query != '' && query != null && query != undefined) {
+      if (query && query != "" && query != null && query != undefined) {
         if (prod.nom.toLowerCase().indexOf(query.toLowerCase()) != -1) {
           match = true;
         }
@@ -372,7 +122,7 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
       } else {
         match = true;
       }
-      if (cat && cat != '' && cat != null && cat != undefined) {
+      if (cat && cat != "" && cat != null && cat != undefined) {
         if (prod.cat != cat) {
           match = false;
         }
@@ -394,12 +144,12 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
         }
       }
     }
-    cb({ ok: true, msg: 'ok', data: res });
+    cb({ ok: true, msg: "ok", data: res });
     return;
   }
 
-  // este bloque se movio a agregarAlCarrito() en functions.js
-  if (action == 'addCart') {
+  // agregar al carrito
+  if (action == "addCart") {
     var prodId = dat;
     var qty = extraDat;
     var userId2 = moreData;
@@ -418,19 +168,19 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
       }
     }
     if (foundProd == null) {
-      cb({ ok: false, msg: 'producto no encontrado', data: null });
+      cb({ ok: false, msg: "producto no encontrado", data: null });
       return;
     }
     if (foundProd.activo == false) {
-      cb({ ok: false, msg: 'producto no disponible', data: null });
+      cb({ ok: false, msg: "producto no disponible", data: null });
       return;
     }
     if (foundProd.stock < qty) {
-      cb({ ok: false, msg: 'stock insuficiente', data: null });
+      cb({ ok: false, msg: "stock insuficiente", data: null });
       return;
     }
     if (foundUser == null) {
-      cb({ ok: false, msg: 'usuario no encontrado', data: null });
+      cb({ ok: false, msg: "usuario no encontrado", data: null });
       return;
     }
     // revisar si ya esta en el carrito
@@ -450,21 +200,17 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
     for (var i = 0; i < foundUser.carrito.length; i++) {
       for (var j = 0; j < dbProducts.length; j++) {
         if (dbProducts[j].id == foundUser.carrito[i].prodId) {
-          total = total + dbProducts[j].prec * foundUser.carrito[i].qty;
+          total = total + (dbProducts[j].prec * foundUser.carrito[i].qty);
           break;
         }
       }
     }
-    cb({
-      ok: true,
-      msg: 'producto agregado al carrito',
-      data: { carrito: foundUser.carrito, total: total },
-    });
+    cb({ ok: true, msg: "producto agregado al carrito", data: { carrito: foundUser.carrito, total: total } });
     return;
   }
 
-  // este bloque se movio a procesarPago() en functions.js
-  if (action == 'checkout') {
+  // procesar pago y checkout
+  if (action == "checkout") {
     var userId3 = dat;
     var metodoPago = extraDat;
     var direccion = moreData;
@@ -476,11 +222,11 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
       }
     }
     if (foundUser2 == null) {
-      cb({ ok: false, msg: 'usuario no encontrado', data: null });
+      cb({ ok: false, msg: "usuario no encontrado", data: null });
       return;
     }
     if (foundUser2.carrito.length == 0) {
-      cb({ ok: false, msg: 'carrito vacio', data: null });
+      cb({ ok: false, msg: "carrito vacio", data: null });
       return;
     }
     // calcular subtotal
@@ -491,12 +237,7 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
         if (dbProducts[j].id == foundUser2.carrito[i].prodId) {
           var itemTotal = dbProducts[j].prec * foundUser2.carrito[i].qty;
           subtotal = subtotal + itemTotal;
-          itemsOrden.push({
-            prod: dbProducts[j].nom,
-            qty: foundUser2.carrito[i].qty,
-            precUnit: dbProducts[j].prec,
-            totalItem: itemTotal,
-          });
+          itemsOrden.push({ prod: dbProducts[j].nom, qty: foundUser2.carrito[i].qty, precUnit: dbProducts[j].prec, totalItem: itemTotal });
           break;
         }
       }
@@ -527,7 +268,7 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
     // calcular puntos ganados
     var puntosGanados = Math.floor(totalFinal / 1000);
     // crear orden
-    var ordenId = 'ORD-' + Date.now();
+    var ordenId = "ORD-" + Date.now();
     var orden = {
       id: ordenId,
       userId: userId3,
@@ -540,9 +281,9 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
       total: totalFinal,
       metodoPago: metodoPago,
       direccion: direccion,
-      estado: 'pendiente',
+      estado: "pendiente",
       puntosGanados: puntosGanados,
-      createdAt: new Date(),
+      createdAt: new Date()
     };
     // actualizar stock
     for (var i = 0; i < foundUser2.carrito.length; i++) {
@@ -561,38 +302,32 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
     foundUser2.historial.push(orden);
     // simular proceso de pago
     var pagoOk = false;
-    if (metodoPago == 'tarjeta') {
+    if (metodoPago == "tarjeta") {
       // simular validacion tarjeta
-      if (
-        flag99 &&
-        flag99.numero &&
-        flag99.numero.length == 16 &&
-        flag99.cvv &&
-        flag99.cvv.length == 3
-      ) {
+      if (flag99 && flag99.numero && flag99.numero.length == 16 && flag99.cvv && flag99.cvv.length == 3) {
         pagoOk = true;
       } else {
-        cb({ ok: false, msg: 'datos de tarjeta invalidos', data: null });
+        cb({ ok: false, msg: "datos de tarjeta invalidos", data: null });
         return;
       }
     }
-    if (metodoPago == 'transferencia') {
+    if (metodoPago == "transferencia") {
       pagoOk = true;
     }
-    if (metodoPago == 'efectivo') {
+    if (metodoPago == "efectivo") {
       pagoOk = true;
     }
     if (pagoOk == true) {
-      orden.estado = 'pagado';
-      cb({ ok: true, msg: 'orden creada exitosamente', data: orden });
+      orden.estado = "pagado";
+      cb({ ok: true, msg: "orden creada exitosamente", data: orden });
     } else {
-      cb({ ok: false, msg: 'metodo de pago no valido', data: null });
+      cb({ ok: false, msg: "metodo de pago no valido", data: null });
     }
     return;
   }
 
-  // este bloque se movio a obtenerEstadisticas() en functions.js
-  if (action == 'getStats') {
+  // obtener estadisticas
+  if (action == "getStats") {
     var stats = {};
     // total usuarios
     var totalUsers = 0;
@@ -605,9 +340,9 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
       totalUsers++;
       if (dbUsers[i].activo == true) totalActivos++;
       if (dbUsers[i].bloqueado == true) totalBloqueados++;
-      if (dbUsers[i].tipo == 'admin') totalAdmin++;
-      if (dbUsers[i].tipo == 'cliente') totalClientes++;
-      if (dbUsers[i].tipo == 'vendedor') totalVendedores++;
+      if (dbUsers[i].tipo == "admin") totalAdmin++;
+      if (dbUsers[i].tipo == "cliente") totalClientes++;
+      if (dbUsers[i].tipo == "vendedor") totalVendedores++;
     }
     // total productos
     var totalProds = 0;
@@ -625,44 +360,22 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
       totalProds++;
       if (dbProducts[i].activo == true) totalActivos2++;
       if (dbProducts[i].activo == false) totalInactivos++;
-      if (dbProducts[i].cat == 'electronica') totalElectronica++;
-      if (dbProducts[i].cat == 'accesorios') totalAccesorios++;
-      if (dbProducts[i].cat == 'audio') totalAudio++;
-      if (dbProducts[i].cat == 'almacenamiento') totalAlmacenamiento++;
-      if (dbProducts[i].cat == 'componentes') totalComponentes++;
-      if (dbProducts[i].cat == 'muebles') totalMuebles++;
+      if (dbProducts[i].cat == "electronica") totalElectronica++;
+      if (dbProducts[i].cat == "accesorios") totalAccesorios++;
+      if (dbProducts[i].cat == "audio") totalAudio++;
+      if (dbProducts[i].cat == "almacenamiento") totalAlmacenamiento++;
+      if (dbProducts[i].cat == "componentes") totalComponentes++;
+      if (dbProducts[i].cat == "muebles") totalMuebles++;
       stockTotal = stockTotal + dbProducts[i].stock;
-      valorInventario =
-        valorInventario + dbProducts[i].prec * dbProducts[i].stock;
+      valorInventario = valorInventario + (dbProducts[i].prec * dbProducts[i].stock);
     }
-    stats.usuarios = {
-      total: totalUsers,
-      activos: totalActivos,
-      bloqueados: totalBloqueados,
-      admin: totalAdmin,
-      clientes: totalClientes,
-      vendedores: totalVendedores,
-    };
-    stats.productos = {
-      total: totalProds,
-      activos: totalActivos2,
-      inactivos: totalInactivos,
-      porCategoria: {
-        electronica: totalElectronica,
-        accesorios: totalAccesorios,
-        audio: totalAudio,
-        almacenamiento: totalAlmacenamiento,
-        componentes: totalComponentes,
-        muebles: totalMuebles,
-      },
-      stockTotal: stockTotal,
-      valorInventario: valorInventario,
-    };
-    cb({ ok: true, msg: 'ok', data: stats });
+    stats.usuarios = { total: totalUsers, activos: totalActivos, bloqueados: totalBloqueados, admin: totalAdmin, clientes: totalClientes, vendedores: totalVendedores };
+    stats.productos = { total: totalProds, activos: totalActivos2, inactivos: totalInactivos, porCategoria: { electronica: totalElectronica, accesorios: totalAccesorios, audio: totalAudio, almacenamiento: totalAlmacenamiento, componentes: totalComponentes, muebles: totalMuebles }, stockTotal: stockTotal, valorInventario: valorInventario };
+    cb({ ok: true, msg: "ok", data: stats });
     return;
   }
 
-  cb({ ok: false, msg: 'accion no reconocida', data: null });
+  cb({ ok: false, msg: "accion no reconocida", data: null });
 }
 
 // =====================================
@@ -674,13 +387,7 @@ function v(cosa, tipo) {
   var r = false;
   if (tipo == 1) {
     // validar email
-    if (
-      cosa != null &&
-      cosa != undefined &&
-      cosa != '' &&
-      cosa.indexOf('@') != -1 &&
-      cosa.indexOf('.') != -1
-    ) {
+    if (cosa != null && cosa != undefined && cosa != "" && cosa.indexOf("@") != -1 && cosa.indexOf(".") != -1) {
       r = true;
     }
   }
@@ -698,34 +405,19 @@ function v(cosa, tipo) {
   }
   if (tipo == 4) {
     // validar string
-    if (
-      cosa != null &&
-      cosa != undefined &&
-      cosa != '' &&
-      typeof cosa == 'string'
-    ) {
+    if (cosa != null && cosa != undefined && cosa != "" && typeof cosa == "string") {
       r = true;
     }
   }
   if (tipo == 5) {
     // validar array
-    if (
-      cosa != null &&
-      cosa != undefined &&
-      Array.isArray(cosa) &&
-      cosa.length > 0
-    ) {
+    if (cosa != null && cosa != undefined && Array.isArray(cosa) && cosa.length > 0) {
       r = true;
     }
   }
   if (tipo == 6) {
     // validar objeto
-    if (
-      cosa != null &&
-      cosa != undefined &&
-      typeof cosa == 'object' &&
-      Object.keys(cosa).length > 0
-    ) {
+    if (cosa != null && cosa != undefined && typeof cosa == "object" && Object.keys(cosa).length > 0) {
       r = true;
     }
   }
@@ -740,43 +432,30 @@ function v(cosa, tipo) {
   }
   if (tipo == 8) {
     // validar rut chileno (super basico)
-    if (
-      cosa != null &&
-      cosa != undefined &&
-      cosa != '' &&
-      cosa.length >= 8 &&
-      cosa.indexOf('-') != -1
-    ) {
+    if (cosa != null && cosa != undefined && cosa != "" && cosa.length >= 8 && cosa.indexOf("-") != -1) {
       r = true;
     }
   }
   return r;
 }
 
-function calcularDescuento(
-  precio,
-  descuentoNivel,
-  descuentoCupon,
-  descuentoEspecial
-) {
+function calcularDescuento(precio, descuentoNivel, descuentoCupon, descuentoEspecial) {
   const montoDescuentoN = precio * (descuentoNivel / 100);
   const montoDescuentoC = (precio - montoDescuentoN) * (descuentoCupon / 100);
-  const montoDescuentoE =
-    (precio - montoDescuentoN - montoDescuentoC) * (descuentoEspecial / 100);
+  const montoDescuentoE = (precio - montoDescuentoN - montoDescuentoC) * (descuentoEspecial / 100);
   return {
-    precioConDescuento:
-      precio - montoDescuentoN - montoDescuentoC - montoDescuentoE,
+    precioConDescuento: precio - montoDescuentoN - montoDescuentoC - montoDescuentoE,
     descuentoCupon: montoDescuentoC,
     descuentoEspecial: montoDescuentoE,
-    descuentoNivel: montoDescuentoN,
+    descuentoNivel: montoDescuentoN
   };
 }
 function sacarPrecioIva(precio, tieneIva) {
   let montoIva = tieneIva ? precio * 0.19 : 0;
-  return { precioConIva: precio + montoIva, montoIva };
+  return { precioConIva: precio + montoIva, montoIva};
 }
 function calcularPrecioEnvio(precio, envio) {
-  if (envio > 0) {
+  if(envio > 0) {
     return precio + envio;
   }
   return precio;
@@ -791,36 +470,23 @@ const calcularPrecioFinalConCuotas = (precio, numeroCuotas) => {
     }
   }
   return precioFinal;
-};
-function calcularPrecio(
-  precioBase,
-  descuentoNivel,
-  descuentoCupon,
-  descuentoEspecial,
-  tieneIva,
-  costoEnvio,
-  numeroCuotas
-) {
+}
+function calcularPrecio(precioBase, descuentoNivel, descuentoCupon, descuentoEspecial, tieneIva, costoEnvio, numeroCuotas) {
+  
   const { precioConDescuento, ...descuentos } = calcularDescuento(
-    precioBase,
-    descuentoNivel,
-    descuentoCupon,
-    descuentoEspecial
+    precioBase, descuentoNivel, descuentoCupon, descuentoEspecial
   );
 
-  const { precioConIva, montoIva } = sacarPrecioIva(
-    precioConDescuento,
-    tieneIva
-  );
+  const { precioConIva, montoIva } = sacarPrecioIva(precioConDescuento, tieneIva);
 
   const subtotal = calcularPrecioEnvio(precioConIva, costoEnvio);
 
   const totalFinal = calcularPrecioFinalConCuotas(subtotal, numeroCuotas);
 
   return {
-    base: precioBase,
-    descuentoNivel: descuentos.descuentoNivel,
-    descuentoCupon: descuentos.descuentoCupon,
+    base:          precioBase,
+    descuentoNivel:   descuentos.descuentoNivel,
+    descuentoCupon:   descuentos.descuentoCupon,
     descuentoEspecial: descuentos.descuentoEspecial,
     montoIva,
     costoEnvio,
@@ -830,116 +496,75 @@ function calcularPrecio(
   };
 }
 
+
 // funcion de reporte
 function hacerReporte(type, from, to, data) {
-  var report = '',
-    lines = [],
-    totalGeneral = 0,
-    totalGeneral2 = 0,
-    totalGeneral3 = 0,
-    count = 0,
-    count2 = 0,
-    count3 = 0,
-    avg = 0,
-    avg2 = 0,
-    avg3 = 0,
-    max = 0,
-    max2 = 0,
-    max3 = 0,
-    min = 999999999,
-    min2 = 999999999,
-    min3 = 999999999;
+  var report = "", lines = [], totalGeneral = 0, totalGeneral2 = 0, totalGeneral3 = 0, count = 0, count2 = 0, count3 = 0, avg = 0, avg2 = 0, avg3 = 0, max = 0, max2 = 0, max3 = 0, 
+  min = 999999999, min2 = 999999999, min3 = 999999999;
 
-  if (type == 'ventas') {
-    report += '=== REPORTE DE VENTAS ===\n';
-    report += 'Desde: ' + from + '\n';
-    report += 'Hasta: ' + to + '\n';
-    report += '========================\n';
+  if (type == "ventas") {
+    report += "=== REPORTE DE VENTAS ===\n";
+    report += "Desde: " + from + "\n";
+    report += "Hasta: " + to + "\n";
+    report += "========================\n";
     for (var i = 0; i < data.length; i++) {
       var venta = data[i];
       totalGeneral = totalGeneral + venta.total;
       count++;
       if (venta.total > max) max = venta.total;
       if (venta.total < min) min = venta.total;
-      lines.push(
-        'Orden: ' +
-          venta.id +
-          ' | Total: $' +
-          venta.total +
-          ' | Estado: ' +
-          venta.estado
-      );
+      lines.push("Orden: " + venta.id + " | Total: $" + venta.total + " | Estado: " + venta.estado);
     }
     avg = count > 0 ? totalGeneral / count : 0;
-    report += lines.join('\n');
-    report += '\n------------------------\n';
-    report += 'Total ordenes: ' + count + '\n';
-    report += 'Total ingresos: $' + totalGeneral + '\n';
-    report += 'Promedio por orden: $' + avg + '\n';
-    report += 'Venta maxima: $' + max + '\n';
-    report += 'Venta minima: $' + min + '\n';
+    report += lines.join("\n");
+    report += "\n------------------------\n";
+    report += "Total ordenes: " + count + "\n";
+    report += "Total ingresos: $" + totalGeneral + "\n";
+    report += "Promedio por orden: $" + avg + "\n";
+    report += "Venta maxima: $" + max + "\n";
+    report += "Venta minima: $" + min + "\n";
   }
-  if (type == 'productos') {
-    report += '=== REPORTE DE PRODUCTOS ===\n';
-    report += 'Desde: ' + from + '\n';
-    report += 'Hasta: ' + to + '\n';
-    report += '============================\n';
+  if (type == "productos") {
+    report += "=== REPORTE DE PRODUCTOS ===\n";
+    report += "Desde: " + from + "\n";
+    report += "Hasta: " + to + "\n";
+    report += "============================\n";
     for (var i = 0; i < data.length; i++) {
       var prod2 = data[i];
       totalGeneral2 = totalGeneral2 + prod2.prec;
       count2++;
       if (prod2.prec > max2) max2 = prod2.prec;
       if (prod2.prec < min2) min2 = prod2.prec;
-      lines.push(
-        'Producto: ' +
-          prod2.nom +
-          ' | Precio: $' +
-          prod2.prec +
-          ' | Stock: ' +
-          prod2.stock +
-          ' | Rating: ' +
-          prod2.rating
-      );
+      lines.push("Producto: " + prod2.nom + " | Precio: $" + prod2.prec + " | Stock: " + prod2.stock + " | Rating: " + prod2.rating);
     }
     avg2 = count2 > 0 ? totalGeneral2 / count2 : 0;
-    report += lines.join('\n');
-    report += '\n----------------------------\n';
-    report += 'Total productos: ' + count2 + '\n';
-    report += 'Precio promedio: $' + avg2 + '\n';
-    report += 'Precio maximo: $' + max2 + '\n';
-    report += 'Precio minimo: $' + min2 + '\n';
+    report += lines.join("\n");
+    report += "\n----------------------------\n";
+    report += "Total productos: " + count2 + "\n";
+    report += "Precio promedio: $" + avg2 + "\n";
+    report += "Precio maximo: $" + max2 + "\n";
+    report += "Precio minimo: $" + min2 + "\n";
   }
-  if (type == 'usuarios') {
-    report += '=== REPORTE DE USUARIOS ===\n';
-    report += 'Desde: ' + from + '\n';
-    report += 'Hasta: ' + to + '\n';
-    report += '===========================\n';
+  if (type == "usuarios") {
+    report += "=== REPORTE DE USUARIOS ===\n";
+    report += "Desde: " + from + "\n";
+    report += "Hasta: " + to + "\n";
+    report += "===========================\n";
     for (var i = 0; i < data.length; i++) {
       var usr2 = data[i];
       totalGeneral3 = totalGeneral3 + usr2.puntos;
       count3++;
       if (usr2.puntos > max3) max3 = usr2.puntos;
       if (usr2.puntos < min3) min3 = usr2.puntos;
-      lines.push(
-        'Usuario: ' +
-          usr2.nombre +
-          ' | Email: ' +
-          usr2.email +
-          ' | Tipo: ' +
-          usr2.tipo +
-          ' | Puntos: ' +
-          usr2.puntos +
-          ' | Activo: ' +
-          usr2.activo
-      );
+      lines.push("Usuario: " + usr2.nombre + " | Email: " + usr2.email + " | Tipo: " + usr2.tipo + " | Puntos: " + usr2.puntos + " | Activo: " + usr2.activo);
     }
     avg3 = count3 > 0 ? totalGeneral3 / count3 : 0;
-    report += lines.join('\n');
-    report += '\n---------------------------\n';
-    report += 'Total usuarios: ' + count3 + '\n';
-    report += 'Puntos promedio: ' + avg3 + '\n';
-    report += 'Max puntos: ' + max3 + '\n';
-    report += 'Min puntos: ' + min3 + '\n';
+    report += lines.join("\n");
+    report += "\n---------------------------\n";
+    report += "Total usuarios: " + count3 + "\n";
+    report += "Puntos promedio: " + avg3 + "\n";
+    report += "Max puntos: " + max3 + "\n";
+    report += "Min puntos: " + min3 + "\n";
   }
   return report;
 }
@@ -948,68 +573,32 @@ function hacerReporte(type, from, to, data) {
 function sendNotif(tipo, userId, msg, data) {
   var n = {};
   var sent = false;
-  if (tipo == 'email') {
+  if (tipo == "email") {
     // simular envio email
-    console.log('Enviando email a usuario ' + userId + ': ' + msg);
-    n = {
-      tipo: 'email',
-      userId: userId,
-      msg: msg,
-      data: data,
-      sentAt: new Date(),
-      ok: true,
-    };
+    console.log("Enviando email a usuario " + userId + ": " + msg);
+    n = { tipo: "email", userId: userId, msg: msg, data: data, sentAt: new Date(), ok: true };
     sent = true;
   }
-  if (tipo == 'sms') {
+  if (tipo == "sms") {
     // simular envio sms
-    console.log('Enviando SMS a usuario ' + userId + ': ' + msg);
-    n = {
-      tipo: 'sms',
-      userId: userId,
-      msg: msg,
-      data: data,
-      sentAt: new Date(),
-      ok: true,
-    };
+    console.log("Enviando SMS a usuario " + userId + ": " + msg);
+    n = { tipo: "sms", userId: userId, msg: msg, data: data, sentAt: new Date(), ok: true };
     sent = true;
   }
-  if (tipo == 'push') {
+  if (tipo == "push") {
     // simular push notification
-    console.log('Enviando push a usuario ' + userId + ': ' + msg);
-    n = {
-      tipo: 'push',
-      userId: userId,
-      msg: msg,
-      data: data,
-      sentAt: new Date(),
-      ok: true,
-    };
+    console.log("Enviando push a usuario " + userId + ": " + msg);
+    n = { tipo: "push", userId: userId, msg: msg, data: data, sentAt: new Date(), ok: true };
     sent = true;
   }
-  if (tipo == 'inapp') {
+  if (tipo == "inapp") {
     // simular notificacion interna
-    console.log('Guardando notif inapp para usuario ' + userId + ': ' + msg);
-    n = {
-      tipo: 'inapp',
-      userId: userId,
-      msg: msg,
-      data: data,
-      sentAt: new Date(),
-      ok: true,
-    };
+    console.log("Guardando notif inapp para usuario " + userId + ": " + msg);
+    n = { tipo: "inapp", userId: userId, msg: msg, data: data, sentAt: new Date(), ok: true };
     sent = true;
   }
   if (sent == false) {
-    n = {
-      tipo: tipo,
-      userId: userId,
-      msg: msg,
-      data: data,
-      sentAt: new Date(),
-      ok: false,
-      err: 'tipo no reconocido',
-    };
+    n = { tipo: tipo, userId: userId, msg: msg, data: data, sentAt: new Date(), ok: false, err: "tipo no reconocido" };
   }
   return n;
 }
@@ -1018,64 +607,28 @@ function sendNotif(tipo, userId, msg, data) {
 function notifyUser(channel, uid, message, payload) {
   var notif = {};
   var wasSent = false;
-  if (channel == 'email') {
-    console.log('Enviando email a usuario ' + uid + ': ' + message);
-    notif = {
-      channel: 'email',
-      uid: uid,
-      message: message,
-      payload: payload,
-      timestamp: new Date(),
-      success: true,
-    };
+  if (channel == "email") {
+    console.log("Enviando email a usuario " + uid + ": " + message);
+    notif = { channel: "email", uid: uid, message: message, payload: payload, timestamp: new Date(), success: true };
     wasSent = true;
   }
-  if (channel == 'sms') {
-    console.log('Enviando SMS a usuario ' + uid + ': ' + message);
-    notif = {
-      channel: 'sms',
-      uid: uid,
-      message: message,
-      payload: payload,
-      timestamp: new Date(),
-      success: true,
-    };
+  if (channel == "sms") {
+    console.log("Enviando SMS a usuario " + uid + ": " + message);
+    notif = { channel: "sms", uid: uid, message: message, payload: payload, timestamp: new Date(), success: true };
     wasSent = true;
   }
-  if (channel == 'push') {
-    console.log('Enviando push a usuario ' + uid + ': ' + message);
-    notif = {
-      channel: 'push',
-      uid: uid,
-      message: message,
-      payload: payload,
-      timestamp: new Date(),
-      success: true,
-    };
+  if (channel == "push") {
+    console.log("Enviando push a usuario " + uid + ": " + message);
+    notif = { channel: "push", uid: uid, message: message, payload: payload, timestamp: new Date(), success: true };
     wasSent = true;
   }
-  if (channel == 'inapp') {
-    console.log('Guardando notif para usuario ' + uid + ': ' + message);
-    notif = {
-      channel: 'inapp',
-      uid: uid,
-      message: message,
-      payload: payload,
-      timestamp: new Date(),
-      success: true,
-    };
+  if (channel == "inapp") {
+    console.log("Guardando notif para usuario " + uid + ": " + message);
+    notif = { channel: "inapp", uid: uid, message: message, payload: payload, timestamp: new Date(), success: true };
     wasSent = true;
   }
   if (wasSent == false) {
-    notif = {
-      channel: channel,
-      uid: uid,
-      message: message,
-      payload: payload,
-      timestamp: new Date(),
-      success: false,
-      error: 'canal no valido',
-    };
+    notif = { channel: channel, uid: uid, message: message, payload: payload, timestamp: new Date(), success: false, error: "canal no valido" };
   }
   return notif;
 }
@@ -1084,66 +637,11 @@ function notifyUser(channel, uid, message, payload) {
 function cupon(code, userId, cartTotal, products) {
   // lista de cupones hardcodeada
   var cupones = [
-    {
-      code: 'DESC10',
-      tipo: 'porcentaje',
-      valor: 10,
-      minCompra: 50000,
-      maxUsos: 100,
-      usos: 45,
-      activo: true,
-      expira: '2024-12-31',
-      categorias: [],
-      usuarios: [],
-    },
-    {
-      code: 'DESC20',
-      tipo: 'porcentaje',
-      valor: 20,
-      minCompra: 100000,
-      maxUsos: 50,
-      usos: 50,
-      activo: true,
-      expira: '2024-06-30',
-      categorias: ['electronica'],
-      usuarios: [],
-    },
-    {
-      code: 'ENVGRATIS',
-      tipo: 'envio',
-      valor: 100,
-      minCompra: 30000,
-      maxUsos: 200,
-      usos: 180,
-      activo: true,
-      expira: '2024-12-31',
-      categorias: [],
-      usuarios: [],
-    },
-    {
-      code: 'BIENVENIDO',
-      tipo: 'fijo',
-      valor: 5000,
-      minCompra: 20000,
-      maxUsos: 1000,
-      usos: 523,
-      activo: true,
-      expira: '2025-12-31',
-      categorias: [],
-      usuarios: [],
-    },
-    {
-      code: 'VIP2024',
-      tipo: 'porcentaje',
-      valor: 25,
-      minCompra: 200000,
-      maxUsos: 20,
-      usos: 15,
-      activo: true,
-      expira: '2024-12-31',
-      categorias: [],
-      usuarios: [1, 3, 5],
-    },
+    { code: "DESC10", tipo: "porcentaje", valor: 10, minCompra: 50000, maxUsos: 100, usos: 45, activo: true, expira: "2024-12-31", categorias: [], usuarios: [] },
+    { code: "DESC20", tipo: "porcentaje", valor: 20, minCompra: 100000, maxUsos: 50, usos: 50, activo: true, expira: "2024-06-30", categorias: ["electronica"], usuarios: [] },
+    { code: "ENVGRATIS", tipo: "envio", valor: 100, minCompra: 30000, maxUsos: 200, usos: 180, activo: true, expira: "2024-12-31", categorias: [], usuarios: [] },
+    { code: "BIENVENIDO", tipo: "fijo", valor: 5000, minCompra: 20000, maxUsos: 1000, usos: 523, activo: true, expira: "2025-12-31", categorias: [], usuarios: [] },
+    { code: "VIP2024", tipo: "porcentaje", valor: 25, minCompra: 200000, maxUsos: 20, usos: 15, activo: true, expira: "2024-12-31", categorias: [], usuarios: [1, 3, 5] }
   ];
   var found = null;
   for (var i = 0; i < cupones.length; i++) {
@@ -1153,24 +651,24 @@ function cupon(code, userId, cartTotal, products) {
     }
   }
   if (found == null) {
-    return { ok: false, msg: 'cupon no existe', descuento: 0 };
+    return { ok: false, msg: "cupon no existe", descuento: 0 };
   }
   if (found.activo == false) {
-    return { ok: false, msg: 'cupon inactivo', descuento: 0 };
+    return { ok: false, msg: "cupon inactivo", descuento: 0 };
   }
   // verificar expiracion
   var today = new Date();
   var expDate = new Date(found.expira);
   if (today > expDate) {
-    return { ok: false, msg: 'cupon expirado', descuento: 0 };
+    return { ok: false, msg: "cupon expirado", descuento: 0 };
   }
   // verificar usos
   if (found.usos >= found.maxUsos) {
-    return { ok: false, msg: 'cupon agotado', descuento: 0 };
+    return { ok: false, msg: "cupon agotado", descuento: 0 };
   }
   // verificar monto minimo
   if (cartTotal < found.minCompra) {
-    return { ok: false, msg: 'monto minimo no alcanzado', descuento: 0 };
+    return { ok: false, msg: "monto minimo no alcanzado", descuento: 0 };
   }
   // verificar si cupon es solo para usuarios especificos
   if (found.usuarios.length > 0) {
@@ -1182,98 +680,47 @@ function cupon(code, userId, cartTotal, products) {
       }
     }
     if (userOk == false) {
-      return {
-        ok: false,
-        msg: 'cupon no valido para este usuario',
-        descuento: 0,
-      };
+      return { ok: false, msg: "cupon no valido para este usuario", descuento: 0 };
     }
   }
   // calcular descuento
   var descuentoFinal = 0;
-  if (found.tipo == 'porcentaje') {
+  if (found.tipo == "porcentaje") {
     descuentoFinal = cartTotal * (found.valor / 100);
   }
-  if (found.tipo == 'fijo') {
+  if (found.tipo == "fijo") {
     descuentoFinal = found.valor;
     if (descuentoFinal > cartTotal) descuentoFinal = cartTotal;
   }
-  if (found.tipo == 'envio') {
+  if (found.tipo == "envio") {
     descuentoFinal = found.valor; // descuento en envio
   }
   found.usos++;
-  return {
-    ok: true,
-    msg: 'cupon aplicado',
-    descuento: descuentoFinal,
-    tipo: found.tipo,
-  };
+  return { ok: true, msg: "cupon aplicado", descuento: descuentoFinal, tipo: found.tipo };
 }
 
 // funcion para buscar (otro duplicado con diferente nombre)
 function search(q, filters) {
   var prods = [
-    {
-      id: 101,
-      nom: 'Laptop Pro 15',
-      cat: 'electronica',
-      prec: 1200000,
-      stock: 5,
-      rating: 4.5,
-      activo: true,
-    },
-    {
-      id: 102,
-      nom: 'Mouse Inalambrico',
-      cat: 'accesorios',
-      prec: 25000,
-      stock: 50,
-      rating: 4.0,
-      activo: true,
-    },
-    {
-      id: 103,
-      nom: 'Teclado Mecanico RGB',
-      cat: 'accesorios',
-      prec: 85000,
-      stock: 20,
-      rating: 4.8,
-      activo: true,
-    },
-    {
-      id: 104,
-      nom: 'Monitor 4K 27"',
-      cat: 'electronica',
-      prec: 450000,
-      stock: 8,
-      rating: 4.6,
-      activo: true,
-    },
-    {
-      id: 105,
-      nom: 'Auriculares Bluetooth',
-      cat: 'audio',
-      prec: 75000,
-      stock: 30,
-      rating: 4.3,
-      activo: true,
-    },
+    { id: 101, nom: "Laptop Pro 15", cat: "electronica", prec: 1200000, stock: 5, rating: 4.5, activo: true },
+    { id: 102, nom: "Mouse Inalambrico", cat: "accesorios", prec: 25000, stock: 50, rating: 4.0, activo: true },
+    { id: 103, nom: "Teclado Mecanico RGB", cat: "accesorios", prec: 85000, stock: 20, rating: 4.8, activo: true },
+    { id: 104, nom: "Monitor 4K 27\"", cat: "electronica", prec: 450000, stock: 8, rating: 4.6, activo: true },
+    { id: 105, nom: "Auriculares Bluetooth", cat: "audio", prec: 75000, stock: 30, rating: 4.3, activo: true }
   ];
   // DATOS DUPLICADOS - exactamente los mismos que en doEverything
   var results = [];
   for (var ii = 0; ii < prods.length; ii++) {
     if (prods[ii].activo == false) continue;
     var m = false;
-    if (q && q != '') {
+    if (q && q != "") {
       if (prods[ii].nom.toLowerCase().indexOf(q.toLowerCase()) != -1) m = true;
     } else {
       m = true;
     }
     if (filters && filters.cat && prods[ii].cat != filters.cat) m = false;
-    if (filters && filters.maxPrice && prods[ii].prec > filters.maxPrice)
-      m = false;
-    if (filters && filters.minPrice && prods[ii].prec < filters.minPrice)
-      m = false;
+    if (filters && filters.maxPrice && prods[ii].prec > filters.maxPrice) m = false;
+    if (filters && filters.minPrice && prods[ii].prec < filters.minPrice) m = false;
     if (m == true) results.push(prods[ii]);
   }
   return results;
@@ -1281,18 +728,18 @@ function search(q, filters) {
 
 // formatear precio (funcion repetida 3 veces con minimas diferencias)
 function fmtPrice(n) {
-  return '$' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return "$" + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 function formatearPrecio(num) {
-  return '$' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return "$" + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 function mostrarPrecio(numero) {
-  return '$' + numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return "$" + numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
 // funcion para generar html de producto (mezcla logica con presentacion)
 function renderProduct(p) {
-  var html = '';
+  var html = "";
   html += "<div class='product-card'>";
   html += "<div class='product-img'>";
   html += "<img src='" + p.imgs[0] + "' alt='" + p.nom + "'>";
@@ -1300,73 +747,67 @@ function renderProduct(p) {
     html += "<div class='badge-agotado'>AGOTADO</div>";
   }
   if (p.stock > 0 && p.stock <= 5) {
-    html +=
-      "<div class='badge-poco-stock'>ÚLTIMAS " + p.stock + ' UNIDADES</div>';
+    html += "<div class='badge-poco-stock'>ÚLTIMAS " + p.stock + " UNIDADES</div>";
   }
-  html += '</div>';
+  html += "</div>";
   html += "<div class='product-info'>";
-  html += '<h3>' + p.nom + '</h3>';
+  html += "<h3>" + p.nom + "</h3>";
   html += "<div class='rating'>";
   // generar estrellas
-  var stars = '';
+  var stars = "";
   for (var i = 0; i < 5; i++) {
     if (i < Math.floor(p.rating)) {
-      stars += '★';
+      stars += "★";
     } else if (i < p.rating) {
-      stars += '☆';
+      stars += "☆";
     } else {
-      stars += '☆';
+      stars += "☆";
     }
   }
   html += stars;
-  html += ' (' + p.rating + ')';
-  html += '</div>';
-  html += "<p class='desc'>" + p.desc + '</p>';
-  html += "<div class='price'>" + fmtPrice(p.prec) + '</div>';
-  html += "<div class='category'>Categoría: " + p.cat + '</div>';
+  html += " (" + p.rating + ")";
+  html += "</div>";
+  html += "<p class='desc'>" + p.desc + "</p>";
+  html += "<div class='price'>" + fmtPrice(p.prec) + "</div>";
+  html += "<div class='category'>Categoría: " + p.cat + "</div>";
   if (p.activo == true && p.stock > 0) {
-    html +=
-      "<button onclick='addToCart(" +
-      p.id +
-      ", 1)' class='btn-cart'>Agregar al carrito</button>";
+    html += "<button onclick='addToCart(" + p.id + ", 1)' class='btn-cart'>Agregar al carrito</button>";
   } else {
     html += "<button disabled class='btn-cart-disabled'>No disponible</button>";
   }
-  html += '</div>';
-  html += '</div>';
+  html += "</div>";
+  html += "</div>";
   return html;
 }
 
 // funcion para procesar formulario de registro (sin separacion de responsabilidades)
-function processRegistrationFormAndValidateAndSaveAndSendEmailAndLoginAndRedirect(
-  formData
-) {
+function processRegistrationFormAndValidateAndSaveAndSendEmailAndLoginAndRedirect(formData) {
   // 1. validar campos
   var errors = [];
-  if (!formData.nombre || formData.nombre == '' || formData.nombre.length < 3) {
-    errors.push('Nombre invalido');
+  if (!formData.nombre || formData.nombre == "" || formData.nombre.length < 3) {
+    errors.push("Nombre invalido");
   }
-  if (!formData.email || formData.email.indexOf('@') == -1) {
-    errors.push('Email invalido');
+  if (!formData.email || formData.email.indexOf("@") == -1) {
+    errors.push("Email invalido");
   }
   if (!formData.pass || formData.pass.length < 8) {
-    errors.push('Password debe tener minimo 8 caracteres');
+    errors.push("Password debe tener minimo 8 caracteres");
   }
   if (formData.pass != formData.passConfirm) {
-    errors.push('Passwords no coinciden');
+    errors.push("Passwords no coinciden");
   }
   if (!formData.rut || formData.rut.length < 8) {
-    errors.push('RUT invalido');
+    errors.push("RUT invalido");
   }
   if (!formData.telefono || formData.telefono.length < 9) {
-    errors.push('Telefono invalido');
+    errors.push("Telefono invalido");
   }
   if (errors.length > 0) {
     return { ok: false, errors: errors };
   }
   // 2. verificar si ya existe
   var exists = false;
-  var usersDB = [{ email: 'juan@mail.com' }, { email: 'maria@mail.com' }]; // hardcoded again
+  var usersDB = [{ email: "juan@mail.com" }, { email: "maria@mail.com" }]; // hardcoded again
   for (var i = 0; i < usersDB.length; i++) {
     if (usersDB[i].email == formData.email) {
       exists = true;
@@ -1374,7 +815,7 @@ function processRegistrationFormAndValidateAndSaveAndSendEmailAndLoginAndRedirec
     }
   }
   if (exists == true) {
-    return { ok: false, errors: ['Email ya registrado'] };
+    return { ok: false, errors: ["Email ya registrado"] };
   }
   // 3. crear usuario
   var newUser = {
@@ -1384,7 +825,7 @@ function processRegistrationFormAndValidateAndSaveAndSendEmailAndLoginAndRedirec
     pass: formData.pass, // ALERTA: guardando password en texto plano
     rut: formData.rut,
     telefono: formData.telefono,
-    tipo: 'cliente',
+    tipo: "cliente",
     puntos: 0,
     descuento: 0,
     historial: [],
@@ -1397,28 +838,19 @@ function processRegistrationFormAndValidateAndSaveAndSendEmailAndLoginAndRedirec
     bloqueado: false,
     ultimoLogin: null,
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   };
   // 4. guardar (simulado)
-  console.log('Guardando usuario en DB...', newUser);
+  console.log("Guardando usuario en DB...", newUser);
   // 5. enviar email de bienvenida
-  console.log('Enviando email de bienvenida a ' + newUser.email);
-  sendNotif(
-    'email',
-    newUser.id,
-    'Bienvenido a la tienda! Tu cuenta ha sido creada.',
-    { userName: newUser.nombre }
-  );
+  console.log("Enviando email de bienvenida a " + newUser.email);
+  sendNotif("email", newUser.id, "Bienvenido a la tienda! Tu cuenta ha sido creada.", { userName: newUser.nombre });
   // 6. auto-login
-  sessData = {
-    user: newUser,
-    token: 'tkn_' + Math.random().toString(36).substr(2, 9),
-    loginTime: new Date(),
-  };
+  sessData = { user: newUser, token: "tkn_" + Math.random().toString(36).substr(2, 9), loginTime: new Date() };
   currentU = newUser;
   // 7. redirigir (simulado)
-  console.log('Redirigiendo a /dashboard...');
-  return { ok: true, user: newUser, session: sessData, redirect: '/dashboard' };
+  console.log("Redirigiendo a /dashboard...");
+  return { ok: true, user: newUser, session: sessData, redirect: "/dashboard" };
 }
 
 // funcion de wishlist duplicando logica del carrito
@@ -1428,7 +860,7 @@ function wishlist(action2, userId4, prodId2) {
     { id: 2, wishlist: [102, 104, 105] },
     { id: 3, wishlist: [] },
     { id: 4, wishlist: [101] },
-    { id: 5, wishlist: [103, 107, 108] },
+    { id: 5, wishlist: [103, 107, 108] }
   ];
   var foundUser3 = null;
   for (var i = 0; i < dbUsers2.length; i++) {
@@ -1438,9 +870,9 @@ function wishlist(action2, userId4, prodId2) {
     }
   }
   if (foundUser3 == null) {
-    return { ok: false, msg: 'usuario no encontrado' };
+    return { ok: false, msg: "usuario no encontrado" };
   }
-  if (action2 == 'add') {
+  if (action2 == "add") {
     var yaEsta2 = false;
     for (var i = 0; i < foundUser3.wishlist.length; i++) {
       if (foundUser3.wishlist[i] == prodId2) {
@@ -1449,16 +881,12 @@ function wishlist(action2, userId4, prodId2) {
       }
     }
     if (yaEsta2 == true) {
-      return { ok: false, msg: 'producto ya en wishlist' };
+      return { ok: false, msg: "producto ya en wishlist" };
     }
     foundUser3.wishlist.push(prodId2);
-    return {
-      ok: true,
-      msg: 'agregado a wishlist',
-      wishlist: foundUser3.wishlist,
-    };
+    return { ok: true, msg: "agregado a wishlist", wishlist: foundUser3.wishlist };
   }
-  if (action2 == 'remove') {
+  if (action2 == "remove") {
     var idx = -1;
     for (var i = 0; i < foundUser3.wishlist.length; i++) {
       if (foundUser3.wishlist[i] == prodId2) {
@@ -1467,49 +895,22 @@ function wishlist(action2, userId4, prodId2) {
       }
     }
     if (idx == -1) {
-      return { ok: false, msg: 'producto no en wishlist' };
+      return { ok: false, msg: "producto no en wishlist" };
     }
     foundUser3.wishlist.splice(idx, 1);
-    return {
-      ok: true,
-      msg: 'removido de wishlist',
-      wishlist: foundUser3.wishlist,
-    };
+    return { ok: true, msg: "removido de wishlist", wishlist: foundUser3.wishlist };
   }
-  if (action2 == 'get') {
+  if (action2 == "get") {
     return { ok: true, wishlist: foundUser3.wishlist };
   }
-  return { ok: false, msg: 'accion no reconocida' };
+  return { ok: false, msg: "accion no reconocida" };
 }
 
 // funcion gigante de actualizacion de perfil que mezcla todo
-function updateUserProfile(
-  uid,
-  field,
-  value,
-  field2,
-  value2,
-  field3,
-  value3,
-  field4,
-  value4,
-  field5,
-  value5
-) {
+function updateUserProfile(uid, field, value, field2, value2, field3, value3, field4, value4, field5, value5) {
   // actualizar hasta 5 campos a la vez con parametros individuales
   var dbUsers3 = [
-    {
-      id: 1,
-      nombre: 'Juan Perez',
-      email: 'juan@mail.com',
-      telefono: '912345678',
-      rut: '12345678-9',
-      direccion: 'Av. Siempre Viva 123',
-      ciudad: 'Santiago',
-      region: 'RM',
-      codPostal: '8320000',
-      pass: '1234',
-    },
+    { id: 1, nombre: "Juan Perez", email: "juan@mail.com", telefono: "912345678", rut: "12345678-9", direccion: "Av. Siempre Viva 123", ciudad: "Santiago", region: "RM", codPostal: "8320000", pass: "1234" }
   ];
   var user4 = null;
   for (var i = 0; i < dbUsers3.length; i++) {
@@ -1518,72 +919,27 @@ function updateUserProfile(
       break;
     }
   }
-  if (user4 == null) return { ok: false, msg: 'no encontrado' };
+  if (user4 == null) return { ok: false, msg: "no encontrado" };
   // actualizar campos sin validacion adecuada
   if (field && value) user4[field] = value;
   if (field2 && value2) user4[field2] = value2;
   if (field3 && value3) user4[field3] = value3;
   if (field4 && value4) user4[field4] = value4;
   if (field5 && value5) user4[field5] = value5;
-  console.log('Usuario actualizado:', user4);
+  console.log("Usuario actualizado:", user4);
   return { ok: true, user: user4 };
 }
 
 // funcion para reviews - mezcla lectura y escritura
 function reviews(action3, prodId3, userId5, rating2, comment, data4) {
   var dbReviews = [
-    {
-      id: 1,
-      prodId: 101,
-      userId: 2,
-      rating: 5,
-      comment: 'Excelente laptop!',
-      date: '2023-08-01',
-      likes: 10,
-      verified: true,
-    },
-    {
-      id: 2,
-      prodId: 101,
-      userId: 3,
-      rating: 4,
-      comment: 'Muy buena pero cara',
-      date: '2023-08-15',
-      likes: 5,
-      verified: true,
-    },
-    {
-      id: 3,
-      prodId: 102,
-      userId: 1,
-      rating: 4,
-      comment: 'Buen mouse',
-      date: '2023-09-01',
-      likes: 2,
-      verified: false,
-    },
-    {
-      id: 4,
-      prodId: 103,
-      userId: 5,
-      rating: 5,
-      comment: 'El mejor teclado que he tenido',
-      date: '2023-09-15',
-      likes: 15,
-      verified: true,
-    },
-    {
-      id: 5,
-      prodId: 104,
-      userId: 2,
-      rating: 4,
-      comment: 'Monitor increible',
-      date: '2023-10-01',
-      likes: 8,
-      verified: true,
-    },
+    { id: 1, prodId: 101, userId: 2, rating: 5, comment: "Excelente laptop!", date: "2023-08-01", likes: 10, verified: true },
+    { id: 2, prodId: 101, userId: 3, rating: 4, comment: "Muy buena pero cara", date: "2023-08-15", likes: 5, verified: true },
+    { id: 3, prodId: 102, userId: 1, rating: 4, comment: "Buen mouse", date: "2023-09-01", likes: 2, verified: false },
+    { id: 4, prodId: 103, userId: 5, rating: 5, comment: "El mejor teclado que he tenido", date: "2023-09-15", likes: 15, verified: true },
+    { id: 5, prodId: 104, userId: 2, rating: 4, comment: "Monitor increible", date: "2023-10-01", likes: 8, verified: true }
   ];
-  if (action3 == 'getAll') {
+  if (action3 == "getAll") {
     var revs = [];
     for (var i = 0; i < dbReviews.length; i++) {
       if (dbReviews[i].prodId == prodId3) {
@@ -1592,7 +948,7 @@ function reviews(action3, prodId3, userId5, rating2, comment, data4) {
     }
     return { ok: true, reviews: revs, count: revs.length };
   }
-  if (action3 == 'add') {
+  if (action3 == "add") {
     // verificar que el usuario haya comprado el producto
     var compro = false; // siempre false en este ejemplo - logica incompleta
     // agregar review sin verificacion real
@@ -1602,23 +958,23 @@ function reviews(action3, prodId3, userId5, rating2, comment, data4) {
       userId: userId5,
       rating: rating2,
       comment: comment,
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().split("T")[0],
       likes: 0,
-      verified: compro,
+      verified: compro
     };
     dbReviews.push(newReview);
     return { ok: true, review: newReview };
   }
-  if (action3 == 'like') {
+  if (action3 == "like") {
     for (var i = 0; i < dbReviews.length; i++) {
       if (dbReviews[i].id == data4) {
         dbReviews[i].likes++;
         return { ok: true, likes: dbReviews[i].likes };
       }
     }
-    return { ok: false, msg: 'review no encontrada' };
+    return { ok: false, msg: "review no encontrada" };
   }
-  if (action3 == 'delete') {
+  if (action3 == "delete") {
     var idx2 = -1;
     for (var i = 0; i < dbReviews.length; i++) {
       if (dbReviews[i].id == data4 && dbReviews[i].userId == userId5) {
@@ -1626,131 +982,81 @@ function reviews(action3, prodId3, userId5, rating2, comment, data4) {
         break;
       }
     }
-    if (idx2 == -1)
-      return { ok: false, msg: 'review no encontrada o no autorizado' };
+    if (idx2 == -1) return { ok: false, msg: "review no encontrada o no autorizado" };
     dbReviews.splice(idx2, 1);
-    return { ok: true, msg: 'review eliminada' };
+    return { ok: true, msg: "review eliminada" };
   }
-  return { ok: false, msg: 'accion invalida' };
+  return { ok: false, msg: "accion invalida" };
 }
 
 // funcion de envio con logica embebida
-function calcShipping(
-  destCity,
-  weight,
-  dimensions,
-  prodType,
-  isUrgent,
-  isFree,
-  hasInsurance
-) {
+function calcShipping(destCity, weight, dimensions, prodType, isUrgent, isFree, hasInsurance) {
   // tasas hardcodeadas
   var baseCost = 0;
   var cityMult = 1;
   var weightCost = 0;
   var insuranceCost = 0;
   var urgentCost = 0;
-
-  if (destCity == 'Santiago') cityMult = 1;
-  if (destCity == 'Valparaiso') cityMult = 1.2;
-  if (destCity == 'Concepcion') cityMult = 1.4;
-  if (destCity == 'La Serena') cityMult = 1.6;
-  if (destCity == 'Antofagasta') cityMult = 1.8;
-  if (destCity == 'Iquique') cityMult = 2.0;
-  if (destCity == 'Punta Arenas') cityMult = 2.5;
-
+  
+  if (destCity == "Santiago") cityMult = 1;
+  if (destCity == "Valparaiso") cityMult = 1.2;
+  if (destCity == "Concepcion") cityMult = 1.4;
+  if (destCity == "La Serena") cityMult = 1.6;
+  if (destCity == "Antofagasta") cityMult = 1.8;
+  if (destCity == "Iquique") cityMult = 2.0;
+  if (destCity == "Punta Arenas") cityMult = 2.5;
+  
   // costo por peso
   if (weight <= 1) weightCost = 2000;
   if (weight > 1 && weight <= 5) weightCost = 3500;
   if (weight > 5 && weight <= 10) weightCost = 5000;
   if (weight > 10 && weight <= 20) weightCost = 8000;
   if (weight > 20) weightCost = 12000;
-
+  
   // tipo de producto
-  if (prodType == 'fragil') weightCost = weightCost * 1.5;
-  if (prodType == 'electronico') weightCost = weightCost * 1.3;
-  if (prodType == 'normal') weightCost = weightCost * 1;
-
+  if (prodType == "fragil") weightCost = weightCost * 1.5;
+  if (prodType == "electronico") weightCost = weightCost * 1.3;
+  if (prodType == "normal") weightCost = weightCost * 1;
+  
   baseCost = weightCost * cityMult;
-
+  
   if (isUrgent == true) urgentCost = baseCost * 0.5;
   if (hasInsurance == true) insuranceCost = baseCost * 0.1;
-  if (isFree == true) return { costo: 0, desglose: 'Envio gratis' };
-
+  if (isFree == true) return { costo: 0, desglose: "Envio gratis" };
+  
   var total = baseCost + urgentCost + insuranceCost;
-  return {
-    costo: total,
-    base: baseCost,
-    urgente: urgentCost,
-    seguro: insuranceCost,
-  };
+  return { costo: total, base: baseCost, urgente: urgentCost, seguro: insuranceCost };
 }
 
 // funcion inventario con numeros magicos
 function checkInventory(prodId4) {
   var prods2 = [
-    { id: 101, stock: 5 },
-    { id: 102, stock: 50 },
-    { id: 103, stock: 20 },
-    { id: 104, stock: 8 },
-    { id: 105, stock: 30 },
-    { id: 106, stock: 15 },
-    { id: 107, stock: 25 },
-    { id: 108, stock: 40 },
-    { id: 109, stock: 0 },
-    { id: 110, stock: 60 },
+    { id: 101, stock: 5 }, { id: 102, stock: 50 }, { id: 103, stock: 20 },
+    { id: 104, stock: 8 }, { id: 105, stock: 30 }, { id: 106, stock: 15 },
+    { id: 107, stock: 25 }, { id: 108, stock: 40 }, { id: 109, stock: 0 },
+    { id: 110, stock: 60 }
   ];
   var prod3 = null;
   for (var i = 0; i < prods2.length; i++) {
-    if (prods2[i].id == prodId4) {
-      prod3 = prods2[i];
-      break;
-    }
+    if (prods2[i].id == prodId4) { prod3 = prods2[i]; break; }
   }
   if (prod3 == null) return { ok: false };
-  var status = '';
-  var color = '';
+  var status = "";
+  var color = "";
   var alerta = false;
-  if (prod3.stock == 0) {
-    status = 'Agotado';
-    color = 'red';
-    alerta = true;
-  }
-  if (prod3.stock > 0 && prod3.stock <= 5) {
-    status = 'Critico';
-    color = 'orange';
-    alerta = true;
-  } // numero magico 5
-  if (prod3.stock > 5 && prod3.stock <= 15) {
-    status = 'Bajo';
-    color = 'yellow';
-    alerta = true;
-  } // numero magico 15
-  if (prod3.stock > 15 && prod3.stock <= 30) {
-    status = 'Normal';
-    color = 'green';
-    alerta = false;
-  } // numero magico 30
-  if (prod3.stock > 30) {
-    status = 'Alto';
-    color = 'green';
-    alerta = false;
-  }
-  return {
-    ok: true,
-    prodId: prodId4,
-    stock: prod3.stock,
-    status: status,
-    color: color,
-    alerta: alerta,
-  };
+  if (prod3.stock == 0) { status = "Agotado"; color = "red"; alerta = true; }
+  if (prod3.stock > 0 && prod3.stock <= 5) { status = "Critico"; color = "orange"; alerta = true; }   // numero magico 5
+  if (prod3.stock > 5 && prod3.stock <= 15) { status = "Bajo"; color = "yellow"; alerta = true; }     // numero magico 15
+  if (prod3.stock > 15 && prod3.stock <= 30) { status = "Normal"; color = "green"; alerta = false; }  // numero magico 30
+  if (prod3.stock > 30) { status = "Alto"; color = "green"; alerta = false; }
+  return { ok: true, prodId: prodId4, stock: prod3.stock, status: status, color: color, alerta: alerta };
 }
 
 // funcion de logs sin estructura
 function log(msg, level, data) {
   var timestamp = new Date().toISOString();
-  var entry = '[' + timestamp + '] [' + level + '] ' + msg;
-  if (data) entry += ' | DATA: ' + JSON.stringify(data);
+  var entry = "[" + timestamp + "] [" + level + "] " + msg;
+  if (data) entry += " | DATA: " + JSON.stringify(data);
   console.log(entry);
   // no hay manejo de niveles, no hay rotacion de logs, no hay storage
 }
@@ -1762,13 +1068,7 @@ function paginateProducts(items, page, size) {
   var start = (page - 1) * size;
   var end = start + size;
   var pageItems = items.slice(start, end);
-  return {
-    items: pageItems,
-    page: page,
-    totalPages: totalPages,
-    total: total,
-    size: size,
-  };
+  return { items: pageItems, page: page, totalPages: totalPages, total: total, size: size };
 }
 function paginateUsers(items2, page2, size2) {
   var total2 = items2.length;
@@ -1776,13 +1076,7 @@ function paginateUsers(items2, page2, size2) {
   var start2 = (page2 - 1) * size2;
   var end2 = start2 + size2;
   var pageItems2 = items2.slice(start2, end2);
-  return {
-    items: pageItems2,
-    page: page2,
-    totalPages: totalPages2,
-    total: total2,
-    size: size2,
-  };
+  return { items: pageItems2, page: page2, totalPages: totalPages2, total: total2, size: size2 };
 }
 function paginateOrders(items3, page3, size3) {
   var total3 = items3.length;
@@ -1790,20 +1084,14 @@ function paginateOrders(items3, page3, size3) {
   var start3 = (page3 - 1) * size3;
   var end3 = start3 + size3;
   var pageItems3 = items3.slice(start3, end3);
-  return {
-    items: pageItems3,
-    page: page3,
-    totalPages: totalPages3,
-    total: total3,
-    size: size3,
-  };
+  return { items: pageItems3, page: page3, totalPages: totalPages3, total: total3, size: size3 };
 }
 
 // funcion de sorting tambien duplicada
 function sortProducts(arr4, field, order) {
   var sorted = arr4.slice();
-  sorted.sort(function (a, b) {
-    if (order == 'asc') {
+  sorted.sort(function(a, b) {
+    if (order == "asc") {
       if (a[field] < b[field]) return -1;
       if (a[field] > b[field]) return 1;
       return 0;
@@ -1817,8 +1105,8 @@ function sortProducts(arr4, field, order) {
 }
 function sortUsers(arr5, field2, order2) {
   var sorted2 = arr5.slice();
-  sorted2.sort(function (a2, b2) {
-    if (order2 == 'asc') {
+  sorted2.sort(function(a2, b2) {
+    if (order2 == "asc") {
       if (a2[field2] < b2[field2]) return -1;
       if (a2[field2] > b2[field2]) return 1;
       return 0;
@@ -1832,8 +1120,8 @@ function sortUsers(arr5, field2, order2) {
 }
 function sortOrders(arr6, field3, order3) {
   var sorted3 = arr6.slice();
-  sorted3.sort(function (a3, b3) {
-    if (order3 == 'asc') {
+  sorted3.sort(function(a3, b3) {
+    if (order3 == "asc") {
       if (a3[field3] < b3[field3]) return -1;
       if (a3[field3] > b3[field3]) return 1;
       return 0;
@@ -1867,76 +1155,57 @@ function formatDate(d4) {
   var hours = d4.getHours();
   var mins = d4.getMinutes();
   var secs = d4.getSeconds();
-  if (day < 10) day = '0' + day;
-  if (month < 10) month = '0' + month;
-  if (hours < 10) hours = '0' + hours;
-  if (mins < 10) mins = '0' + mins;
-  if (secs < 10) secs = '0' + secs;
-  return day + '/' + month + '/' + year + ' ' + hours + ':' + mins + ':' + secs;
+  if (day < 10) day = "0" + day;
+  if (month < 10) month = "0" + month;
+  if (hours < 10) hours = "0" + hours;
+  if (mins < 10) mins = "0" + mins;
+  if (secs < 10) secs = "0" + secs;
+  return day + "/" + month + "/" + year + " " + hours + ":" + mins + ":" + secs;
 }
-function formatDate2(d5) {
-  // igual que la anterior
+function formatDate2(d5) { // igual que la anterior
   var day2 = d5.getDate();
   var month2 = d5.getMonth() + 1;
   var year2 = d5.getFullYear();
-  if (day2 < 10) day2 = '0' + day2;
-  if (month2 < 10) month2 = '0' + month2;
-  return day2 + '/' + month2 + '/' + year2;
+  if (day2 < 10) day2 = "0" + day2;
+  if (month2 < 10) month2 = "0" + month2;
+  return day2 + "/" + month2 + "/" + year2;
 }
-function formatDate3(dateStr) {
-  // otra variante
-  var parts = dateStr.split('-');
-  return parts[2] + '/' + parts[1] + '/' + parts[0];
+function formatDate3(dateStr) { // otra variante
+  var parts = dateStr.split("-");
+  return parts[2] + "/" + parts[1] + "/" + parts[0];
 }
 
 // funcion de "utilidades" que hace 10 cosas diferentes
 function utils(op, val, val2, val3) {
-  if (op == 'capitalize') {
+  if (op == "capitalize") {
     return val.charAt(0).toUpperCase() + val.slice(1).toLowerCase();
   }
-  if (op == 'truncate') {
-    return val.length > val2 ? val.substring(0, val2) + '...' : val;
+  if (op == "truncate") {
+    return val.length > val2 ? val.substring(0, val2) + "..." : val;
   }
-  if (op == 'random') {
+  if (op == "random") {
     return Math.floor(Math.random() * (val2 - val + 1)) + val;
   }
-  if (op == 'slugify') {
-    return val
-      .toLowerCase()
-      .replace(/ /g, '-')
-      .replace(/[^\w-]+/g, '');
+  if (op == "slugify") {
+    return val.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, "");
   }
-  if (op == 'deepClone') {
+  if (op == "deepClone") {
     return JSON.parse(JSON.stringify(val));
   }
-  if (op == 'isEmptyObj') {
+  if (op == "isEmptyObj") {
     return Object.keys(val).length === 0;
   }
-  if (op == 'sumArray') {
-    var s = 0;
-    for (var i = 0; i < val.length; i++) s += val[i];
-    return s;
+  if (op == "sumArray") {
+    var s = 0; for (var i = 0; i < val.length; i++) s += val[i]; return s;
   }
-  if (op == 'avgArray') {
-    var s2 = 0;
-    for (var i = 0; i < val.length; i++) s2 += val[i];
-    return val.length > 0 ? s2 / val.length : 0;
+  if (op == "avgArray") {
+    var s2 = 0; for (var i = 0; i < val.length; i++) s2 += val[i]; return val.length > 0 ? s2 / val.length : 0;
   }
-  if (op == 'uniqueArray') {
-    var u = [];
-    for (var i = 0; i < val.length; i++) {
-      if (u.indexOf(val[i]) == -1) u.push(val[i]);
-    }
-    return u;
+  if (op == "uniqueArray") {
+    var u = []; for (var i = 0; i < val.length; i++) { if (u.indexOf(val[i]) == -1) u.push(val[i]); } return u;
   }
-  if (op == 'flatArray') {
-    var f = [];
-    for (var i = 0; i < val.length; i++) {
-      if (Array.isArray(val[i])) {
-        for (var j = 0; j < val[i].length; j++) f.push(val[i][j]);
-      } else f.push(val[i]);
-    }
-    return f;
+  if (op == "flatArray") {
+    var f = []; for (var i = 0; i < val.length; i++) { if (Array.isArray(val[i])) { for (var j = 0; j < val[i].length; j++) f.push(val[i][j]); } else f.push(val[i]); } return f;
   }
 }
 
@@ -1954,8 +1223,7 @@ module.exports = {
   formatearPrecio: formatearPrecio,
   mostrarPrecio: mostrarPrecio,
   renderProduct: renderProduct,
-  processRegistrationFormAndValidateAndSaveAndSendEmailAndLoginAndRedirect:
-    processRegistrationFormAndValidateAndSaveAndSendEmailAndLoginAndRedirect,
+  processRegistrationFormAndValidateAndSaveAndSendEmailAndLoginAndRedirect: processRegistrationFormAndValidateAndSaveAndSendEmailAndLoginAndRedirect,
   wishlist: wishlist,
   updateUserProfile: updateUserProfile,
   reviews: reviews,
@@ -1971,5 +1239,5 @@ module.exports = {
   formatDate: formatDate,
   formatDate2: formatDate2,
   formatDate3: formatDate3,
-  utils: utils,
+  utils: utils
 };
