@@ -30,3 +30,80 @@ function formatDate3(dateStr) {
   }
   return dateStr; // si no, devuelvo lo mismo
 }
+
+// =====================================
+// utilidades varias - sacadas de stackoverflow, mdn y otros lados
+// =====================================
+
+var utils = {
+  capitalize: function(str) {
+    if (!str) return ''
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+  },
+
+  truncate: function(str, max) {
+    if (str.length <= max) return str
+    return str.slice(0, max - 3) + '...'
+  },
+
+  // fuente: https://github.com/simov/slugify
+  slugify: function(str) {
+    return str.toLowerCase().trim().replace(/ /g, '-').replace(/[^\w-]+/g, '')
+  },
+
+  deepClone: function(obj) {
+    // no funciona con fechas ni funciones, solo objetos planos
+    return JSON.parse(JSON.stringify(obj))
+  },
+  isEmptyObj: function(obj) {
+    return Object.keys(obj).length === 0
+  },
+
+  sumArray: function(arr) {
+    var total = 0
+    for (var i = 0; i < arr.length; i++) {
+      total += arr[i]
+    }
+    return total
+  },
+
+  avgArray: function(arr) {
+    if (arr.length === 0) return 0
+    return this.sumArray(arr) / arr.length
+  },
+  uniqueArray: function(arr) {
+    var result = []
+    for (var i = 0; i < arr.length; i++) {
+      if (result.indexOf(arr[i]) === -1) {
+        result.push(arr[i])
+      }
+    }
+    return result
+  },
+
+
+
+  flatArray: function(arr) {
+    var flat = []
+    for (var i = 0; i < arr.length; i++) {
+      if (Array.isArray(arr[i])) {
+        for (var j = 0; j < arr[i].length; j++) {
+          flat.push(arr[i][j])
+        }
+      } else {
+        flat.push(arr[i])
+      }
+    }
+    return flat
+  }
+}
+
+export { utils }
+
+//////////////usarlo en otro archivo////////////////
+import { utils } from './utils.js'
+
+utils.capitalize('hola mundo')   // "Hola mundo"
+utils.slugify('Mi producto')     // "mi-producto"
+utils.sumArray([1, 2, 3])       // 6
+///////////////////////////////////////////////////////
