@@ -27,4 +27,3 @@ function sortByField(items, fieldName, sortOrder) {
     return 0;
   });
 }
-
