@@ -377,7 +377,7 @@ function doEverything(u, p2, action, dat, extraDat, moreData, flag99, cb) {
 
   cb({ ok: false, msg: "accion no reconocida", data: null });
 }
-
+//actualización
 // =====================================
 // mas funciones con malas practicas
 // =====================================
@@ -1208,7 +1208,7 @@ function utils(op, val, val2, val3) {
     var f = []; for (var i = 0; i < val.length; i++) { if (Array.isArray(val[i])) { for (var j = 0; j < val[i].length; j++) f.push(val[i][j]); } else f.push(val[i]); } return f;
   }
 }
-
+ 
 // exportar todo junto sin modularizacion
 module.exports = {
   doEverything: doEverything,
