@@ -8,7 +8,8 @@ Proyecto de refactorización de una tienda online desarrollado como trabajo de a
 
 | Nombre | Archivo original |
 |---|---|
-| Matias Diaz | `Funciones (matias h)` |
+| Matias Diaz | `Functions.js` |
+| Matias Hurtado | `Funciones (matias h)` |
 | Bastián Pizarro | `functionsBasti.js` |
 | Benjamín Fernández | `funcionesB.js` |
 | Cristóbal | `functionsCristobal.js` |
