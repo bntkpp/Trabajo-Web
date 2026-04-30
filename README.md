@@ -110,6 +110,47 @@ npm test
 # → mocha test/**/*.test.js
 ```
 
+### Resultados
+
+```
+  validarFormulario
+    ✔ retorna sin errores con datos válidos
+    ✔ detecta email inválido
+    ✔ detecta contraseñas que no coinciden
+
+  buscarUsuario
+    ✔ retorna ok:true con credenciales correctas
+    ✔ retorna ok:false con contraseña incorrecta
+    ✔ retorna ok:false si el usuario está bloqueado
+
+  agregarAlCarrito
+    ✔ agrega un producto al carrito correctamente
+    ✔ retorna error si el producto no existe
+    ✔ retorna error si no hay suficiente stock
+
+  wishlist
+    ✔ agrega un producto a la wishlist
+    ✔ remueve un producto de la wishlist
+
+  calcularPrecio
+    ✔ retorna el precio base si no hay descuentos ni IVA
+    ✔ aplica IVA del 19% correctamente
+    ✔ aplica el descuento de nivel correctamente
+
+  procesarPago
+    ✔ retorna error si el carrito está vacío
+    ✔ procesa el pago correctamente
+
+  buscarProductos
+    ✔ retorna todos los productos activos
+    ✔ filtra por categoría
+    ✔ filtra por texto en el nombre
+    ✔ retorna vacío si no hay coincidencias
+
+
+  20 passing (11ms)
+```
+
 ---
 
 ## Herramientas
