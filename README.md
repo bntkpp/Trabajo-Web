@@ -1,5 +1,5 @@
 # Tienda Online — Refactorización Clean Code
-
+# Link Canva: https://canva.link/k3aqqb1qh7g8tc6
 Proyecto de refactorización de una tienda online desarrollado como trabajo de asignatura. El código original consistía en un único archivo de más de 1.200 líneas con funciones mezcladas, duplicadas y sin estructura. El objetivo fue aplicar principios de **Clean Code** para transformarlo en un sistema modular, mantenible y testeable.
 
 ---
