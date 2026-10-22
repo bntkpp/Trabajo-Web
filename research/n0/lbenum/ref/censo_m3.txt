@@ -1,0 +1,43 @@
+m 3
+lo 0
+hi 524288
+extra 0
+total 524288
+words_sec 4124
+pairs_sec 4124
+minWcore 1
+viol_P1 0
+eq_Wcore_m2 16
+minWext_eq 1
+viol_P2 0
+P3_eq_Wext_ge1 16
+P4_fail 0
+dist 1 5 1 1 16
+dist 1 5 2 0 12
+dist 1 5 2 1 68
+dist 1 5 3 0 24
+dist 1 5 3 1 160
+dist 1 5 4 1 24
+dist 1 6 3 0 32
+dist 1 6 4 0 92
+dist 1 6 5 0 36
+dist 2 5 2 1 108
+dist 2 5 2 2 272
+dist 2 5 3 0 12
+dist 2 5 3 1 280
+dist 2 5 3 2 604
+dist 2 5 4 0 8
+dist 2 5 4 1 188
+dist 2 5 4 2 252
+dist 2 6 2 0 24
+dist 2 6 2 1 72
+dist 2 6 3 0 100
+dist 2 6 3 1 324
+dist 2 6 4 0 128
+dist 2 6 4 1 500
+dist 2 6 5 0 12
+dist 2 6 5 1 84
+dist 2 7 3 0 8
+dist 2 7 4 0 192
+dist 2 7 5 0 372
+dist 2 7 6 0 120

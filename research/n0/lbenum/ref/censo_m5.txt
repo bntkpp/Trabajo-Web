@@ -1,0 +1,129 @@
+m 5
+lo 0
+hi 2147483648
+extra 0
+total 2147483648
+words_sec 1972932
+pairs_sec 1972932
+minWcore 3
+viol_P1 0
+eq_Wcore_m2 4524
+minWext_eq 1
+viol_P2 0
+P3_eq_Wext_ge1 4524
+P4_fail 0
+dist 1 9 3 1 16
+dist 1 9 4 1 208
+dist 1 9 5 0 44
+dist 1 9 5 1 1020
+dist 1 9 6 0 252
+dist 1 9 6 1 2284
+dist 1 9 7 0 392
+dist 1 9 7 1 3272
+dist 1 9 8 0 116
+dist 1 9 8 1 1252
+dist 1 9 9 0 16
+dist 1 9 9 1 88
+dist 1 10 4 0 4
+dist 1 10 5 0 188
+dist 1 10 6 0 876
+dist 1 10 7 0 1540
+dist 1 10 8 0 1420
+dist 1 10 9 0 532
+dist 1 10 10 0 48
+dist 2 9 4 1 132
+dist 2 9 4 2 1628
+dist 2 9 5 0 100
+dist 2 9 5 1 2884
+dist 2 9 5 2 10428
+dist 2 9 6 0 352
+dist 2 9 6 1 10716
+dist 2 9 6 2 26844
+dist 2 9 7 0 460
+dist 2 9 7 1 12580
+dist 2 9 7 2 28604
+dist 2 9 8 0 92
+dist 2 9 8 1 2820
+dist 2 9 8 2 7624
+dist 2 10 4 0 12
+dist 2 10 4 1 436
+dist 2 10 5 0 412
+dist 2 10 5 1 3712
+dist 2 10 6 0 1744
+dist 2 10 6 1 11644
+dist 2 10 7 0 5124
+dist 2 10 7 1 22268
+dist 2 10 8 0 4100
+dist 2 10 8 1 17740
+dist 2 10 9 0 868
+dist 2 10 9 1 4848
+dist 2 10 10 0 32
+dist 2 10 10 1 64
+dist 2 11 4 0 12
+dist 2 11 5 0 216
+dist 2 11 6 0 3052
+dist 2 11 7 0 9168
+dist 2 11 8 0 14160
+dist 2 11 9 0 9524
+dist 2 11 10 0 2492
+dist 2 11 11 0 44
+dist 3 9 3 2 872
+dist 3 9 3 3 3636
+dist 3 9 4 1 796
+dist 3 9 4 2 13732
+dist 3 9 4 3 32980
+dist 3 9 5 0 64
+dist 3 9 5 1 7060
+dist 3 9 5 2 68348
+dist 3 9 5 3 97388
+dist 3 9 6 0 132
+dist 3 9 6 1 12140
+dist 3 9 6 2 113484
+dist 3 9 6 3 137996
+dist 3 9 7 0 168
+dist 3 9 7 1 10044
+dist 3 9 7 2 68284
+dist 3 9 7 3 76888
+dist 3 9 8 0 12
+dist 3 9 8 1 712
+dist 3 9 8 2 5652
+dist 3 9 8 3 9212
+dist 3 10 4 1 4
+dist 3 10 4 2 724
+dist 3 10 5 0 232
+dist 3 10 5 1 5408
+dist 3 10 5 2 16712
+dist 3 10 6 0 2608
+dist 3 10 6 1 37412
+dist 3 10 6 2 71376
+dist 3 10 7 0 5200
+dist 3 10 7 1 80920
+dist 3 10 7 2 133328
+dist 3 10 8 0 3460
+dist 3 10 8 1 52756
+dist 3 10 8 2 84552
+dist 3 10 9 0 384
+dist 3 10 9 1 7016
+dist 3 10 9 2 14616
+dist 3 11 5 0 404
+dist 3 11 5 1 3312
+dist 3 11 6 0 5548
+dist 3 11 6 1 25360
+dist 3 11 7 0 18892
+dist 3 11 7 1 70244
+dist 3 11 8 0 36932
+dist 3 11 8 1 108252
+dist 3 11 9 0 20248
+dist 3 11 9 1 62028
+dist 3 11 10 0 2880
+dist 3 11 10 1 11976
+dist 3 11 11 0 28
+dist 3 11 11 1 28
+dist 3 12 5 0 52
+dist 3 12 6 0 2216
+dist 3 12 7 0 19112
+dist 3 12 8 0 55248
+dist 3 12 9 0 72280
+dist 3 12 10 0 42592
+dist 3 12 11 0 8464
+dist 3 12 12 0 24
