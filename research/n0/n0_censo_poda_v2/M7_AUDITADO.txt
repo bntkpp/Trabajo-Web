@@ -1,0 +1,37 @@
+N0 CENSO-PODA V2 — M7 AUDITADO
+Fecha: 2026-10-23
+Auditor: ChatGPT
+
+VEREDICTO: PASS PARA HABILITAR M8
+
+Commit sellado:
+74cf2e26549902ffb1ea33767e21d033f8fbab30
+
+ZIP de resultados M7+pre:
+N0_RESULTADO_CENSO_M7_PRE_2026-10-23.zip
+SHA-256:
+372952e4c8c0f7e96b2d610777bab965961c3a8a6d600d082834a88cef2768f0
+
+M7:
+m=7
+N=43
+cobertura exacta=2^43
+cobertura_ok=1
+falsadores=0
+hojas/extremales=68
+rc=0
+
+RESULT_m7.txt SHA-256:
+bd12d9bda627e3514cddfd2d520138e26e9a3c98af4facc62302e54411dfeb48
+
+POST_BINARIOS.txt SHA-256:
+c2e52154ca3b4197917f3fb9794945927a930e7a879e6819910f5ab69f9f3ba4
+
+La identidad de HOLDOUT_ext7.txt y HOLDOUT_stats7.txt NO fue inspeccionada.
+
+Estatus científico:
+OBSERVACION EXHAUSTIVA POR UNA IMPLEMENTACION.
+Pendiente segunda implementación independiente para CERTIFICADO EXACTO.
+
+Este archivo solo habilita el gate M8 del preregistro V2+A1R1.
+No promueve M7 a Certificado exacto.
